@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profesionali Saulės Skaičiuoklė</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 min-h-screen p-4 md:p-8 font-sans">
+
+    <div class="max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+        
+        <div class="bg-blue-900 p-6 text-white flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Saulės elektrinės skaičiuoklė</h1>
+            <span class="text-sm bg-blue-800 px-3 py-1 rounded-full border border-blue-700">Pasiūlymo forma</span>
+        </div>
+
+        <div class="p-6 space-y-8">
+
+            <div class="border border-slate-200 rounded-xl p-6 bg-slate-50 shadow-sm">
+                <h2 class="text-lg font-bold text-blue-900 mb-4 border-b pb-2">Užklausa ir objekto vieta</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold mb-1 text-slate-700">Komentaras / Pastabos (Užklausa)</label>
+                            <textarea id="queryText" rows="4" placeholder="Įveskite kliento pageidavimus ar pastabas..." class="w-full border border-slate-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-inner"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1 text-slate-700">Objekto adresas</label>
+                            <div class="flex">
+                                <input type="text" id="addressInput" placeholder="Pvz., Gedimino pr. 1, Vilnius" class="flex-1 border border-slate-300 p-3 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-inner">
+                                <button onclick="updateMap()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 rounded-r-lg font-semibold transition-colors">
+                                    Ieškoti
+                                </button>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-1">Įrašykite adresą ir paspauskite „Ieškoti“, kad pamatytumėte jį žemėlapyje.</p>
+                        </div>
+                    </div>
+
+                    <div class="rounded-lg overflow-hidden border border-slate-300 shadow-sm bg-white h-48 md:h-full min-h-[200px] relative">
+                        <iframe 
+                            id="gmap_canvas" 
+                            width="100%" 
+                            height="100%" 
+                            frameborder="0" 
+                            scrolling="no" 
+                            marginheight="0" 
+                            marginwidth="0" 
+                            src="https://maps.google.com/maps?q=Lithuania&t=&z=6&ie=UTF8&iwloc=&output=embed"
+                            class="absolute inset-0">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border border-slate-200 rounded-xl p-6 bg-white shadow-sm">
+                <h2 class="text-lg font-bold text-blue-900 mb-4 border-b pb-2">1. Techniniai parametrai ir suvartojimas</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Įvado galia (kW)</label>
+                        <select id="gridPower" class="w-full border border-slate-300 p-2 rounded focus:ring-blue-500 focus:border-blue-500"></select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Įvado tipas (Fazės)</label>
+                        <div class="flex space-x-4 mt-2 bg-slate-50 p-2 rounded border border-slate-200">
+                            <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="phase" value="1" checked class="text-blue-600 focus:ring-blue-500"> <span>Vienfazis</span></label>
+                            <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="phase" value="3" class="text-blue-600 focus:ring-blue-500"> <span>Trifazis</span></label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Stogo tipas</label>
+                        <div class="flex space-x-4 mt-2 bg-slate-50 p-2 rounded border border-slate-200">
+                            <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="roofType" value="slaitinis" checked class="text-blue-600"> <span>Šlaitinis</span></label>
+                            <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="roofType" value="plokscias" class="text-blue-600"> <span>Plokščias</span></label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Stogo kryptis</label>
+                        <select id="roofDirection" class="w-full border border-slate-300 p-2 rounded">
+                            <option>Pietūs</option>
+                            <option>Pietryčiai / Pietvakariai</option>
+                            <option>Rytai / Vakarai</option>
+                        </select>
+                    </div>
+
+                    <div class="col-span-1 md:col-span-2 bg-slate-50 p-3 rounded border border-slate-200">
+                        <div class="flex justify-between items-center mb-3 border-b border-slate-200 pb-2">
+                            <label class="block text-sm font-semibold text-slate-700">Stogo išmatavimai</label>
+                            <button type="button" onclick="addRoofRow()" class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded font-bold hover:bg-blue-200 transition-colors">
+                                + Pridėti šlaitą
+                            </button>
+                        </div>
+                        
+                        <div id="roofRowsContainer" class="space-y-2">
+                            <div class="flex space-x-3 items-end roof-row">
+                                <div class="w-5/12">
+                                    <label class="block text-[10px] font-semibold mb-1 text-slate-500 uppercase tracking-wide">Ilgis (m)</label>
+                                    <input type="number" value="10" class="w-full border p-2 rounded text-center roof-length">
+                                </div>
+                                <div class="flex items-center justify-center pb-2 text-slate-400">×</div>
+                                <div class="w-5/12">
+                                    <label class="block text-[10px] font-semibold mb-1 text-slate-500 uppercase tracking-wide">Plotis (m)</label>
+                                    <input type="number" value="5" class="w-full border p-2 rounded text-center roof-width">
+                                </div>
+                                <div class="w-2/12 pb-2 text-center flex justify-center">
+                                    <button type="button" onclick="removeRoofRow(this)" class="text-red-400 hover:text-red-600 hidden delete-roof-btn transition-colors">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-3 pt-2 border-t border-slate-200 flex justify-between items-center bg-white p-2 rounded border border-slate-100 shadow-sm">
+                            <div class="text-xs text-slate-500 uppercase font-bold">Bendras stogo plotas:</div>
+                            <div class="font-bold text-lg text-blue-900"><span id="roofAreaDisplay">50</span><span class="text-sm font-normal ml-1">m²</span></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-blue-50 p-3 rounded border border-blue-100 transition-all hover:shadow-md">
+                        <label class="flex items-center space-x-3 font-semibold cursor-pointer">
+                            <input type="checkbox" id="esoCheck" class="w-5 h-5 text-blue-600 rounded"> 
+                            <span class="text-blue-900">ESO atidavimas į tinklą</span>
+                        </label>
+                        <div id="esoBox" class="hidden mt-3 pt-3 border-t border-blue-200">
+                            <label class="text-xs font-semibold text-blue-800 uppercase">Leistina generuoti galia:</label>
+                            <select id="esoPower" class="w-full border-blue-300 p-2 rounded text-sm mt-1 bg-white"></select>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-3 rounded border transition-all hover:shadow-md">
+                        <label class="flex items-center space-x-3 font-semibold cursor-pointer">
+                            <input type="checkbox" id="shadowCheck" class="w-5 h-5 text-slate-600 rounded"> 
+                            <span>Krenta šešėlis ant stogo?</span>
+                        </label>
+                        <div id="shadowBox" class="hidden mt-3 pt-3 border-t border-slate-200">
+                            <label class="text-xs font-semibold text-slate-600 uppercase">Šešėlio įtaka (%):</label>
+                            <select id="shadowPercent" class="w-full border-slate-300 p-2 rounded text-sm mt-1 bg-white">
+                                <option value="10">10%</option><option value="20">20%</option><option value="30">30%</option>
+                                <option value="40">40%</option><option value="50">50%</option><option value="100">100% (Visiškas)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="bg-yellow-50 p-3 rounded border border-yellow-200">
+                        <label class="block text-sm font-bold text-yellow-900 mb-1">Suvartojimas per metus (kWh)</label>
+                        <input type="number" id="baseConsumption" value="5000" class="w-full border-yellow-300 p-2 rounded font-bold text-lg">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Jūsų kWh kaina iš tiekėjo (€)</label>
+                        <input type="number" step="0.01" id="kwhPrice" value="0.24" class="w-full border p-2 rounded bg-slate-50">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">PVGIS (1 kWp generuoja, kWh)</label>
+                        <input type="number" id="pvgis" value="950" class="w-full border p-2 rounded bg-slate-50">
+                    </div>
+
+                    <div class="bg-green-50 p-4 rounded border border-green-200 lg:col-span-3 transition-all hover:shadow-md">
+                        <label class="flex items-center space-x-3 font-bold text-green-900 cursor-pointer">
+                            <input type="checkbox" id="evCheck" class="w-5 h-5 text-green-600 rounded"> 
+                            <span>Turite elektromobilį (EV)?</span>
+                        </label>
+                        <div id="evBox" class="hidden mt-4 pt-4 border-t border-green-200 flex flex-col md:flex-row md:space-x-8 space-y-4 md:space-y-0">
+                            <div class="w-full md:w-1/3">
+                                <label class="text-xs font-bold text-green-800 uppercase">Kiek kWh įkraunate per metus?</label>
+                                <input type="number" id="evKwh" value="2000" class="w-full border-green-300 p-2 rounded mt-1 font-semibold">
+                            </div>
+                            <div class="w-full md:w-2/3 flex items-center">
+                                <label class="flex items-center space-x-3 cursor-pointer bg-white p-2 rounded border border-green-100 w-full hover:bg-green-100 transition-colors">
+                                    <input type="checkbox" id="evStationCheck" class="w-5 h-5 text-green-600 rounded"> 
+                                    <span class="font-semibold text-green-900">Jau turiu krovimo stotelę</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col md:flex-row md:space-x-6 space-y-3 md:space-y-0 lg:col-span-3 border-t border-slate-200 pt-6 mt-2">
+                        <label class="flex items-center space-x-3 font-bold text-purple-700 cursor-pointer bg-purple-50 p-3 rounded border border-purple-100 flex-1 hover:bg-purple-100 transition-colors">
+                            <input type="checkbox" id="batteryCheck" class="w-6 h-6 text-purple-600 rounded"> 
+                            <span>Reikalingas kaupiklis (Baterija)</span>
+                        </label>
+                        
+                        <div class="flex-1">
+                            <label class="flex items-center space-x-3 font-bold text-emerald-700 cursor-pointer bg-emerald-50 p-3 rounded border border-emerald-100 w-full hover:bg-emerald-100 transition-colors">
+                                <input type="checkbox" id="apvaCheck" class="w-6 h-6 text-emerald-600 rounded" checked> 
+                                <span>APVA parama</span>
+                            </label>
+                            <p id="apvaWarningMsg" class="text-xs text-red-500 font-bold mt-2 hidden"></p>
+                        </div>
+
+                        <label class="flex items-center space-x-3 font-bold text-slate-700 cursor-pointer bg-slate-100 p-3 rounded border border-slate-200 flex-1 hover:bg-slate-200 transition-colors">
+                            <input type="checkbox" id="installCheck" class="w-6 h-6 text-slate-600 rounded" checked> 
+                            <span>Reikia montavimo (+600 €)</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border border-slate-200 rounded-xl p-6 bg-white shadow-sm">
+                <h2 class="text-lg font-bold text-blue-900 mb-4 border-b pb-2">2. Įrangos komplektacija</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <div id="inverterStandardBox" class="bg-slate-50 p-4 rounded border border-slate-200">
+                        <label class="block text-sm font-bold mb-2 text-slate-800 uppercase tracking-wide">Inverteris</label>
+                        <select id="inverterSelect" class="w-full border border-slate-300 p-2 rounded bg-white shadow-sm mb-2"></select>
+                        <p id="inverterDesc" class="text-xs text-slate-500 font-medium"></p>
+                    </div>
+
+                    <div id="inverterHybridBox" class="hidden bg-purple-50 p-4 rounded border border-purple-200 shadow-sm relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-purple-600 text-white text-[10px] font-bold px-2 py-1 rounded-bl">AKTYVUOTA</div>
+                        <label class="block text-sm font-bold mb-2 text-purple-900 uppercase tracking-wide">Inverteris + Kaupiklis (Komplektas)</label>
+                        <select id="hybridSelect" class="w-full border border-purple-300 p-2 rounded bg-white shadow-sm font-semibold text-purple-900 mb-2"></select>
+                        <p id="hybridDesc" class="text-xs text-purple-700 font-medium opacity-90"></p>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded border border-slate-200 relative">
+                        <label class="block text-sm font-bold mb-2 text-slate-800 uppercase tracking-wide">Saulės moduliai</label>
+                        <select id="moduleSelect" class="w-full border border-slate-300 p-2 rounded bg-white shadow-sm mb-2"></select>
+                        
+                        <p class="text-xs text-slate-500 mb-3 font-medium">
+                            Maksimaliai ant stogo telpa: <span id="maxModuleCount" class="font-bold text-blue-600 text-sm">0</span> vnt.
+                        </p>
+
+                        <div class="flex items-center bg-blue-50 p-3 rounded border border-blue-100 shadow-sm">
+                            <div class="w-1/2 pr-2">
+                                <label class="block text-[10px] font-bold text-blue-800 uppercase mb-1">Norimas kiekis (vnt.)</label>
+                                <input type="number" id="manualModuleCount" value="14" min="1" class="w-full border border-blue-300 p-2 rounded font-bold text-lg focus:ring-blue-500 focus:border-blue-500 text-center">
+                            </div>
+                            <div class="w-1/2 border-l border-blue-200 pl-3 text-center">
+                                <label class="block text-[10px] font-bold text-blue-800 uppercase mb-1">Sistemos galia</label>
+                                <div class="font-black text-xl text-blue-900"><span id="modulePowerDisplay">0.00</span> <span class="text-sm font-bold">kWp</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded border border-slate-200">
+                        <label class="block text-sm font-bold mb-2 text-slate-800 uppercase tracking-wide">Optimizatoriai</label>
+                        <select id="optimizerSelect" class="w-full border border-slate-300 p-2 rounded bg-white shadow-sm"></select>
+                        <p id="optimizerDesc" class="text-xs text-slate-600 font-medium mt-2 hidden bg-white p-2 border border-slate-100 rounded shadow-sm">
+                            Įskaičiuotas Tigo TS4-A-O optimizatorius (52.27 €/vnt.) ir būtinas TIGO valdymo rinkinys (CCA+TAP+PS) už 278.30 €.
+                        </p>
+                    </div>
+
+                    <div id="evStationProductBox" class="hidden bg-green-50 p-4 rounded border border-green-200 shadow-sm relative">
+                        <div class="absolute top-0 right-0 bg-green-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl">REKOMENDACIJA</div>
+                        <label class="block text-sm font-bold mb-2 text-green-900 uppercase tracking-wide">Krovimo stotelė</label>
+                        <select id="evStationSelect" class="w-full border border-green-300 p-2 rounded bg-white shadow-sm font-semibold text-green-900"></select>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <div class="bg-slate-900 text-white rounded-2xl p-6 md:p-8 shadow-2xl relative overflow-hidden">
+                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-blue-600 rounded-full mix-blend-multiply filter blur-2xl opacity-50"></div>
+                    <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-purple-600 rounded-full mix-blend-multiply filter blur-2xl opacity-50"></div>
+                    
+                    <h3 class="text-xl font-bold mb-6 border-b border-slate-700 pb-3 relative z-10 flex items-center">
+                        <svg class="w-6 h-6 mr-2 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                        Projekto sąmata
+                    </h3>
+                    
+                    <div class="space-y-3 text-sm text-slate-300 mb-8 relative z-10">
+                        <div class="flex justify-between items-center py-1 border-b border-slate-800">
+                            <span>Įrangos kaina:</span> <span id="resEquipPrice" class="font-semibold text-white">0 €</span>
+                        </div>
+                        <div class="flex justify-between items-center py-1 border-b border-slate-800">
+                            <span>Montavimo darbai:</span> <span id="resInstallPrice" class="font-semibold text-white">0 €</span>
+                        </div>
+                        <div id="apvaDiscountBox" class="flex justify-between items-center py-2 text-emerald-400 bg-emerald-900/30 px-3 rounded -mx-3">
+                            <span class="font-bold flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                APVA kompensacija:
+                            </span> 
+                            <span id="resApva" class="font-black text-lg">-0 €</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-6 border-t border-slate-700 relative z-10">
+                        <div class="flex justify-between items-end mb-2">
+                            <p class="text-sm text-slate-400">Kaina be paramos:</p>
+                            <span id="resTotalNoApva" class="font-bold text-slate-300 line-through">0 €</span>
+                        </div>
+                        <div class="bg-blue-600 rounded-xl p-4 text-center shadow-inner mt-4">
+                            <p class="text-blue-200 text-sm font-bold uppercase tracking-widest mb-1">Galutinė investicija</p>
+                            <div class="text-4xl font-black text-white">
+                                <span id="resTotal">0</span> <span class="text-2xl text-blue-300">€</span>
+                            </div>
+                        </div>
+                        <p id="apvaNote" class="text-xs text-center text-emerald-400 mt-3 font-medium">*Suma nurodyta jau pritaikius valstybės paramą</p>
+                    </div>
+                </div>
+
+                <div class="bg-white border-2 border-blue-100 rounded-2xl p-6 md:p-8 shadow-xl flex flex-col">
+                    <h3 class="text-xl font-bold text-blue-900 mb-6 border-b border-blue-100 pb-3 flex items-center">
+                        <svg class="w-6 h-6 mr-2 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        Efektyvumo analizė
+                    </h3>
+                    
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                            <p class="text-[10px] uppercase font-bold text-slate-500 mb-1">Bendras poreikis</p>
+                            <p class="text-2xl font-black text-slate-800"><span id="resTotalConsumption">0</span><span class="text-sm text-slate-500 font-normal ml-1">kWh</span></p>
+                            <p id="evConsumptionNote" class="text-[10px] text-green-600 font-semibold mt-1 hidden">+ EV krovimas</p>
+                        </div>
+                        
+                        <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                            <p class="text-[10px] uppercase font-bold text-blue-600 mb-1">Sistemos galia</p>
+                            <p class="text-2xl font-black text-blue-900"><span id="resKw">0</span><span class="text-sm text-blue-600 font-normal ml-1">kWp</span></p>
+                            <p class="text-[10px] text-blue-600 mt-1">Generuos: <span id="resGenerated" class="font-bold">0</span> kWh/m.</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-auto space-y-4">
+                        <div class="bg-green-50 p-5 rounded-xl border border-green-200 flex justify-between items-center">
+                            <div>
+                                <p class="text-xs uppercase font-bold text-green-700 mb-1">Sutaupysite per metus</p>
+                                <p class="text-3xl font-black text-green-600">~ <span id="resSavings">0</span> €</p>
+                            </div>
+                            <svg class="w-10 h-10 text-green-300 opacity-50" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
+                        </div>
+
+                        <div class="text-center pt-4">
+                            <p class="text-sm text-slate-500 uppercase font-semibold tracking-wider">Investicijos grąža</p>
+                            <p class="text-5xl font-black text-blue-900 mt-1"><span id="resPayback">0</span> <span class="text-lg text-slate-500 font-medium">metų</span></p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateMap() {
+            const address = document.getElementById('addressInput').value;
+            const iframe = document.getElementById('gmap_canvas');
+            if(address.trim() !== '') {
+                const searchQuery = encodeURIComponent(address + ", Lithuania");
+                iframe.src = `https://maps.google.com/maps?q=${searchQuery}&t=k&z=18&ie=UTF8&iwloc=&output=embed`;
+            }
+        }
+
+        document.getElementById('addressInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') updateMap();
+        });
+
+        // ==========================================
+        // KELIU ŠLAITŲ PRIDĖJIMO LOGIKA
+        // ==========================================
+        function addRoofRow() {
+            const container = document.getElementById('roofRowsContainer');
+            const rowHtml = `
+                <div class="flex space-x-3 items-end roof-row mt-2">
+                    <div class="w-5/12">
+                        <input type="number" value="0" class="w-full border p-2 rounded text-center roof-length">
+                    </div>
+                    <div class="flex items-center justify-center pb-2 text-slate-400">×</div>
+                    <div class="w-5/12">
+                        <input type="number" value="0" class="w-full border p-2 rounded text-center roof-width">
+                    </div>
+                    <div class="w-2/12 pb-2 text-center flex justify-center">
+                        <button type="button" onclick="removeRoofRow(this)" class="text-red-400 hover:text-red-600 delete-roof-btn transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', rowHtml);
+            toggleDeleteButtons();
+            updateInputListeners();
+            calculate();
+        }
+
+        function removeRoofRow(btn) {
+            btn.closest('.roof-row').remove();
+            toggleDeleteButtons();
+            calculate();
+        }
+
+        function toggleDeleteButtons() {
+            const rows = document.querySelectorAll('.roof-row');
+            const btns = document.querySelectorAll('.delete-roof-btn');
+            if(rows.length > 1) {
+                btns.forEach(btn => btn.classList.remove('hidden'));
+            } else {
+                btns.forEach(btn => btn.classList.add('hidden'));
+            }
+        }
+
+        // ==========================================
+        // DATA IR KAINOS
+        // ==========================================
+        const DATA = {
+            inverters: [
+                { name: "Solis S5-GR3P5K 5kW (Trifazis)", price: 529.98, desc: "Patikimas trifazis inverteris su dviem MPPT išėjimais. Pasižymi itin aukštu efektyvumu ir tinka standartinėms namų saulės elektrinėms." },
+                { name: "FoxESS T5-G3 (GD470) 5kW (Trifazis)", price: 545.33, desc: "Kompaktiškas ir našus trifazis inverteris. Žema pradinė įtampa užtikrina, kad elektrinė pradės gaminti energiją anksčiau ryte ir baigs vėliau vakare." },
+                { name: "Solis S5-GR3P6K 6kW (Trifazis)", price: 551.76, desc: "Patikimas trifazis inverteris su dviem MPPT išėjimais. Pasižymi itin aukštu efektyvumu ir tinka standartinėms namų saulės elektrinėms." },
+                { name: "FoxESS T6-G3 (GD470) 6kW (Trifazis)", price: 559.61, desc: "Kompaktiškas ir našus trifazis inverteris. Žema pradinė įtampa užtikrina ilgesnį generacijos laiką." },
+                { name: "Solis S5-GR3P8K 8kW (Trifazis)", price: 602.58, desc: "Patikimas trifazis inverteris su dviem MPPT išėjimais ir itin aukštu efektyvumu." },
+                { name: "Solis S5-GR3P10K 10kW (Trifazis)", price: 666.47, desc: "Patikimas trifazis inverteris su dviem MPPT išėjimais. Tinka standartinėms namų saulės elektrinėms." },
+                { name: "Solis S5-GR3P12K 12kW (Trifazis)", price: 724.55, desc: "Galingas ir patikimas trifazis inverteris didesnėms sistemoms." },
+                { name: "Solis S5-GR3P15K 15kW (Trifazis)", price: 768.11, desc: "Galingas ir patikimas trifazis inverteris didesnėms sistemoms." },
+                { name: "Sungrow SH6.0RS 6kW (Vienfazis hibridinis)", price: 726.00, desc: "Premium klasės vienfazis hibridinis inverteris su integruota greito atsarginio maitinimo (back-up) funkcija dingus elektrai." },
+                { name: "Solis S6-EH1P5K-L-PLUS 5kW (Vienfazis hibridinis)", price: 1033.34, desc: "Išmanus S6 kartos vienfazis hibridas. Užtikrina namų energetinį saugumą." },
+                { name: "FoxESS P3-5.0-SH 5kW (Hibridinis)", price: 1544.79, desc: "Pažangus trifazis hibridinis inverteris. Palaiko asimetrinį apkrovimą (energija atiduodama į tą fazę, kuriai jos labiausiai reikia)." },
+                { name: "FoxESS P3-6.0-SH 6kW (Hibridinis)", price: 1853.72, desc: "Pažangus trifazis hibridinis inverteris. Palaiko asimetrinį apkrovimą." },
+                { name: "FoxESS P3-8.0-SH 8kW (Hibridinis)", price: 1633.32, desc: "Pažangus trifazis hibridinis inverteris. Palaiko asimetrinį apkrovimą." },
+                { name: "Solis S6-EH1P8K-L-PLUS 8kW (Vienfazis hibridinis)", price: 1447.16, desc: "Išmanus S6 kartos vienfazis hibridas. Puikiai suderinamas su įvairiomis baterijomis." },
+                { name: "Solis S6-EH3P8K-H-EU 8kW (Trifazis hibridinis)", price: 1292.28, desc: "Ypač galingas trifazis hibridas. Palaiko asimetrinį atidavimą į tinklą, veikia su aukštos įtampos baterijomis ir užtikrina nepertraukiamą maitinimą (UPS)." },
+                { name: "Solis S6-EH3P10K-H-EU 10kW (Trifazis hibridinis)", price: 1301.96, desc: "Ypač galingas trifazis hibridas. Palaiko asimetrinį atidavimą į tinklą ir UPS funkciją." },
+                { name: "Solis S6-EH3P20K-H 20kW (Trifazis hibridinis)", price: 2129.60, desc: "Ypač galingas trifazis hibridas labai dideliems poreikiams. Palaiko asimetrinį apkrovimą ir UPS funkciją." }
+            ],
+            
+            hybrids: [
+                { name: "FoxESS 10kW + FoxESS EP12 11.52kWh", price: 3705.13, desc: "Aukščiausios klasės FoxESS hibridinė sistema su aukštos įtampos (LiFePO4) baterija. Modulinis dizainas užtikrina ilgaamžiškumą." },
+                { name: "FoxESS 15kW + FoxESS EP12", price: 3969.27, desc: "Galingas sprendimas: 15kW hibridinė sistema su aukštos įtampos (LiFePO4) baterija. Modulinis dizainas užtikrina ilgaamžiškumą." },
+                { name: "SAJ 8kW + HS2 10kWh", price: 3320.72, desc: "Estetiškas „Viskas viename“ (All-in-one) sprendimas, kur inverteris ir baterija yra viename elegantiškame korpuse. Turi UPS funkciją." },
+                { name: "SAJ 8kW + HS2 15kWh", price: 4353.10, desc: "Estetiškas „Viskas viename“ sprendimas. Didesnė baterijos talpa ir integruota UPS funkcija (apsauga nuo elektros dingimo)." },
+                { name: "SAJ 8kW + HS2 20kWh", price: 5385.47, desc: "Maksimalus „Viskas viename“ sprendimas. Milžiniškas 20kWh energijos rezervas ir asimetrinis apkrovimo palaikymas." },
+                { name: "SAJ 10kW + HS2 10kWh", price: 3375.90, desc: "Galingas „Viskas viename“ sprendimas su UPS funkcija ir asimetriniu apkrovimu." },
+                { name: "SAJ 10kW + HS2 15kWh", price: 4408.27, desc: "10kW hibridinis inverteris ir 15kWh baterija viename elegantiškame korpuse. Turi UPS funkciją." },
+                { name: "SAJ 10kW + HS2 20kWh", price: 5440.64, desc: "Galingiausias SAJ sprendimas su maksimalia 20kWh baterija viename korpuse. Turi UPS funkciją ir asimetrinį apkrovimą." }
+            ],
+
+            modules: [
+                { name: "AIKO Neostar MAH54Mb 450W (Stiklas-plastikas, pilnai juodas)", price: 80.78, area: 1.95, powerW: 450 },
+                { name: "AIKO Neostar MAH54Mb 445W (Stiklas-plastikas, juodas rėmas)", price: 91.89, area: 1.95, powerW: 445 },
+                { name: "LONGI LR7-54HTB 460M 460W (Full Black TOPCon)", price: 71.39, area: 1.95, powerW: 460 },
+                { name: "Jolywood N-Type JW-HD108N R2 500W B (Full Black, dvipusiai)", price: 85.31, area: 1.95, powerW: 500 }
+            ],
+
+            evStations: [
+                { name: "Amina S32A 22kW EV", price: 561.92 },
+                { name: "Amina S20A 22kW EV", price: 640.33 },
+                { name: "FoxESS L11P EV 11kW", price: 457.38 },
+                { name: "Teltonika TeltoCharge 11kW (Type 2, 5m kabelis)", price: 870.27 },
+                { name: "Teltonika TeltoCharge 22kW (Type 2, 5m kabelis)", price: 904.02 }
+            ],
+            
+            optimizerPrice: 52.27, 
+            optimizerHubPrice: 278.30, 
+            installPrice: 600,
+            apvaFixedDiscount: 5012.19 
+        };
+
+        function populateKwSelects() {
+            let options = '';
+            for(let i=1; i<=30; i++) options += `<option value="${i}">${i} kW</option>`;
+            document.getElementById('gridPower').innerHTML = options;
+            document.getElementById('gridPower').value = "10";
+            document.getElementById('esoPower').innerHTML = options;
+            document.getElementById('esoPower').value = "10";
+            
+            let optOptions = '';
+            for(let i=0; i<=30; i++) optOptions += `<option value="${i}">${i} vnt.</option>`;
+            document.getElementById('optimizerSelect').innerHTML = optOptions;
+        }
+
+        function populateProducts() {
+            const createOptions = (arr) => arr.map((item, index) => `<option value="${index}">${item.name}</option>`).join('');
+            document.getElementById('inverterSelect').innerHTML = createOptions(DATA.inverters);
+            document.getElementById('hybridSelect').innerHTML = createOptions(DATA.hybrids);
+            document.getElementById('moduleSelect').innerHTML = createOptions(DATA.modules);
+            document.getElementById('evStationSelect').innerHTML = createOptions(DATA.evStations);
+        }
+
+        function updateInputListeners() {
+            const inputs = document.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                input.removeEventListener('input', calculate); 
+                input.removeEventListener('change', calculate);
+                
+                input.addEventListener('input', calculate);
+                input.addEventListener('change', calculate);
+            });
+        }
+
+        function calculate() {
+            const baseCons = parseFloat(document.getElementById('baseConsumption').value) || 0;
+            const kwhPrice = parseFloat(document.getElementById('kwhPrice').value) || 0;
+            const pvgis = parseFloat(document.getElementById('pvgis').value) || 0;
+            
+            // Kelių šlaitų ploto sumavimas
+            let roofArea = 0;
+            const lengths = document.querySelectorAll('.roof-length');
+            const widths = document.querySelectorAll('.roof-width');
+            for(let i = 0; i < lengths.length; i++) {
+                const l = parseFloat(lengths[i].value) || 0;
+                const w = parseFloat(widths[i].value) || 0;
+                roofArea += (l * w);
+            }
+            
+            const hasEso = document.getElementById('esoCheck').checked;
+            const hasShadow = document.getElementById('shadowCheck').checked;
+            const shadowPercent = hasShadow ? parseFloat(document.getElementById('shadowPercent').value) : 0;
+            
+            const hasEv = document.getElementById('evCheck').checked;
+            const evKwh = hasEv ? (parseFloat(document.getElementById('evKwh').value) || 0) : 0;
+            const hasStation = document.getElementById('evStationCheck').checked;
+
+            const hasBattery = document.getElementById('batteryCheck').checked;
+            const hasApva = document.getElementById('apvaCheck').checked;
+            const hasInstall = document.getElementById('installCheck').checked;
+
+            const optimizersCount = parseInt(document.getElementById('optimizerSelect').value);
+            const selectedModule = DATA.modules[document.getElementById('moduleSelect').value];
+            
+            const selInverter = DATA.inverters[document.getElementById('inverterSelect').value];
+            const selHybrid = DATA.hybrids[document.getElementById('hybridSelect').value];
+            document.getElementById('inverterDesc').innerText = selInverter.desc || "";
+            document.getElementById('hybridDesc').innerText = selHybrid.desc || "";
+
+            // Optimizatorių prierašo logika
+            if(optimizersCount > 0) {
+                document.getElementById('optimizerDesc').classList.remove('hidden');
+            } else {
+                document.getElementById('optimizerDesc').classList.add('hidden');
+            }
+
+            document.getElementById('esoBox').style.display = hasEso ? 'block' : 'none';
+            document.getElementById('shadowBox').style.display = hasShadow ? 'block' : 'none';
+            document.getElementById('evBox').style.display = hasEv ? 'flex' : 'none';
+            
+            if(hasBattery) {
+                document.getElementById('inverterStandardBox').classList.add('hidden');
+                document.getElementById('inverterHybridBox').classList.remove('hidden');
+            } else {
+                document.getElementById('inverterStandardBox').classList.remove('hidden');
+                document.getElementById('inverterHybridBox').classList.add('hidden');
+            }
+
+            if(hasEv && !hasStation) {
+                document.getElementById('evStationProductBox').classList.remove('hidden');
+            } else {
+                document.getElementById('evStationProductBox').classList.add('hidden');
+            }
+
+            let totalCons = baseCons + evKwh;
+            
+            let maxModuleCount = Math.floor(roofArea / selectedModule.area);
+            document.getElementById('maxModuleCount').innerText = maxModuleCount;
+
+            let manualModuleCount = parseInt(document.getElementById('manualModuleCount').value) || 0;
+
+            let totalKw = (manualModuleCount * selectedModule.powerW) / 1000;
+            document.getElementById('modulePowerDisplay').innerText = totalKw.toFixed(2);
+            
+            let generatedKwh = totalKw * pvgis * (1 - (shadowPercent / 100));
+
+            // KAINŲ SKAIČIAVIMAS
+            let equipPrice = 0;
+            equipPrice += (manualModuleCount * selectedModule.price);
+            
+            if(optimizersCount > 0) {
+                equipPrice += (optimizersCount * DATA.optimizerPrice); // Pridedame kiekvieno optimizatoriaus kainą
+                equipPrice += DATA.optimizerHubPrice; // Automatiškai pridedame rinkinio kainą (CCA+TAP+PS)
+            }
+            
+            if(hasBattery) {
+                equipPrice += selHybrid.price;
+            } else {
+                equipPrice += selInverter.price;
+            }
+
+            if(hasEv && !hasStation) {
+                equipPrice += DATA.evStations[document.getElementById('evStationSelect').value].price;
+            }
+
+            let installCost = hasInstall ? DATA.installPrice : 0;
+            let totalNoApva = equipPrice + installCost;
+            
+            let apvaDiscount = 0;
+            let apvaWarning = document.getElementById('apvaWarningMsg');
+            
+            if(hasApva) {
+                if(!hasBattery) {
+                    apvaWarning.innerText = "Parama skiriama tik įsirengiant elektrinę KARTU su kaupikliu.";
+                    apvaWarning.classList.remove('hidden');
+                    apvaDiscount = 0;
+                } else if(totalKw < 5) {
+                    apvaWarning.innerText = "Parama skiriama tik nuo 5 kW galios elektrinėms.";
+                    apvaWarning.classList.remove('hidden');
+                    apvaDiscount = 0;
+                } else {
+                    apvaWarning.classList.add('hidden');
+                    apvaDiscount = DATA.apvaFixedDiscount; 
+                }
+            } else {
+                apvaWarning.classList.add('hidden');
+            }
+
+            let finalPrice = totalNoApva - apvaDiscount;
+            if (finalPrice < 0) finalPrice = 0; 
+
+            let usedKwhForSavings = Math.min(generatedKwh, totalCons); 
+            let yearlySavings = usedKwhForSavings * kwhPrice;
+            let paybackYears = yearlySavings > 0 ? (finalPrice / yearlySavings).toFixed(1) : 0;
+
+            document.getElementById('roofAreaDisplay').innerText = roofArea.toFixed(1);
+            
+            document.getElementById('resEquipPrice').innerText = equipPrice.toFixed(2) + " €";
+            document.getElementById('resInstallPrice').innerText = installCost.toFixed(2) + " €";
+            
+            if(hasApva && apvaDiscount > 0) {
+                document.getElementById('apvaDiscountBox').classList.remove('hidden');
+                document.getElementById('apvaNote').classList.remove('hidden');
+                document.getElementById('resApva').innerText = "-" + apvaDiscount.toFixed(2) + " €";
+            } else {
+                document.getElementById('apvaDiscountBox').classList.add('hidden');
+                document.getElementById('apvaNote').classList.add('hidden');
+            }
+
+            document.getElementById('resTotalNoApva').innerText = totalNoApva.toFixed(2) + " €";
+            document.getElementById('resTotal').innerText = finalPrice.toFixed(2);
+
+            document.getElementById('resTotalConsumption').innerText = totalCons;
+            if(hasEv) {
+                document.getElementById('evConsumptionNote').classList.remove('hidden');
+            } else {
+                document.getElementById('evConsumptionNote').classList.add('hidden');
+            }
+
+            document.getElementById('resGenerated').innerText = generatedKwh.toFixed(0);
+            document.getElementById('resKw').innerText = totalKw.toFixed(2);
+            document.getElementById('resSavings').innerText = yearlySavings.toFixed(0);
+            document.getElementById('resPayback').innerText = paybackYears;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            populateKwSelects();
+            populateProducts();
+            updateInputListeners();
+            toggleDeleteButtons();
+            calculate();
+        });
+    </script>
+</body>
+</html>
