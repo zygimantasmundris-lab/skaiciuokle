@@ -375,17 +375,25 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                     <div id="batteryInfoBox" class="hidden bg-purple-50 p-4 rounded-xl border border-purple-200 mb-4 flex flex-col space-y-2 text-sm shadow-sm">
                         <h4 class="text-purple-900 font-bold border-b border-purple-200 pb-1 mb-1 flex items-center uppercase tracking-wide text-xs">
                             <svg class="w-4 h-4 mr-1 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                            Baterijos įkrovimo prognozė
+                            Baterijos įkrovimo prognozė (vidurdienį)
                         </h4>
                         <div class="flex justify-between items-center">
-                            <span class="text-purple-700 font-medium">Vasarą (saulėtą dieną):</span>
+                            <span class="text-purple-700 font-medium">Vasarą:</span>
                             <span class="font-black text-purple-900">~<span id="resBatSummer">0</span> val.</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-purple-700 font-medium">Pavasarį / Rudenį:</span>
+                            <span class="text-purple-700 font-medium">Pavasarį:</span>
+                            <span class="font-black text-purple-900">~<span id="resBatSpring">0</span> val.</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-purple-700 font-medium">Rudenį:</span>
                             <span class="font-black text-purple-900">~<span id="resBatAutumn">0</span> val.</span>
                         </div>
-                        <p class="text-[10px] text-purple-500 mt-1 leading-tight italic">*Apytikslis laikas. Reali trukmė priklauso nuo namo momentinio suvartojimo dienos metu.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-purple-700 font-medium">Žiemą:</span>
+                            <span class="font-black text-purple-900">~<span id="resBatWinter">0</span> val.</span>
+                        </div>
+                        <p class="text-[10px] text-purple-500 mt-1 leading-tight italic">*Apytikslis laikas. Reali trukmė priklauso nuo namo momentinio suvartojimo.</p>
                     </div>
 
                     <div class="mt-auto space-y-4">
@@ -657,10 +665,9 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             let totalKw = (manualModuleCount * selectedModule.powerW) / 1000;
             document.getElementById('modulePowerDisplay').innerText = totalKw.toFixed(2);
             
-            // ŠEŠĖLIO LOGIKA (Neutralizuojama, jei yra optimizatorių)
             let actualShadowPercent = shadowPercent;
             if (hasShadow && optimizersCount > 0) {
-                actualShadowPercent = 0; // Optimizatoriai panaikina šešėlį
+                actualShadowPercent = 0; 
                 document.getElementById('shadowOptimizerNote').classList.remove('hidden');
             } else {
                 document.getElementById('shadowOptimizerNote').classList.add('hidden');
@@ -671,13 +678,15 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             let actualBatteryCapacity = 0;
             if(hasBattery && totalKw > 0) {
                 actualBatteryCapacity = (batteryMode === 'kit') ? selHybrid.capacity : selBattery.capacity;
-                let summerPower = totalKw * 0.8; 
-                let summerTime = actualBatteryCapacity / summerPower;
-                let autumnPower = totalKw * 0.35; 
-                let autumnTime = actualBatteryCapacity / autumnPower;
+                let summerTime = actualBatteryCapacity / (totalKw * 0.8);
+                let springTime = actualBatteryCapacity / (totalKw * 0.6);
+                let autumnTime = actualBatteryCapacity / (totalKw * 0.3);
+                let winterTime = actualBatteryCapacity / (totalKw * 0.1);
 
                 document.getElementById('resBatSummer').innerText = summerTime > 0 ? summerTime.toFixed(1) : "0";
+                document.getElementById('resBatSpring').innerText = springTime > 0 ? springTime.toFixed(1) : "0";
                 document.getElementById('resBatAutumn').innerText = autumnTime > 0 ? autumnTime.toFixed(1) : "0";
+                document.getElementById('resBatWinter').innerText = winterTime > 0 ? winterTime.toFixed(1) : "0";
             }
 
             let curtailmentPercent = 0;
