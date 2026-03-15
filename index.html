@@ -48,7 +48,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                             scrolling="no" 
                             marginheight="0" 
                             marginwidth="0" 
-                            src="https://maps.google.com/maps?q=Lietuva&t=k&z=19&ie=UTF8&iwloc=&output=embed"
+                            src="https://maps.google.com/maps?q=Lietuva&t=k&z=6&ie=UTF8&iwloc=&output=embed"
                             class="absolute inset-0">
                         </iframe>
                     </div>
@@ -376,12 +376,11 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
     </div>
 
     <script>
-        // GOOGLE MAPS PATAISYMAS (SVARBU!)
+        // GOOGLE MAPS TEISINGA NUORODA
         function updateMap() {
             const address = document.getElementById('addressInput').value;
             const iframe = document.getElementById('gmap_canvas');
             if(address.trim() !== '') {
-                // Naudojama teisinga 'q=' sintaksė
                 const searchQuery = encodeURIComponent(address + ", Lietuva");
                 iframe.src = `https://maps.google.com/maps?q=${searchQuery}&t=k&z=19&ie=UTF8&iwloc=&output=embed`;
             }
@@ -582,7 +581,6 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             document.getElementById('shadowBox').style.display = hasShadow ? 'block' : 'none';
             document.getElementById('evBox').style.display = hasEv ? 'flex' : 'none';
             
-            // BATERIJOS LOGIKA EKRANE
             if(hasBattery) {
                 document.getElementById('batteryModeToggleBox').classList.remove('hidden');
                 if(batteryMode === 'kit') {
@@ -622,9 +620,6 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             
             let generatedKwh = totalKw * pvgis * (1 - (shadowPercent / 100));
 
-            // =====================================
-            // KAINŲ IŠSKAIDYMAS (Įranga)
-            // =====================================
             let modulesPrice = manualModuleCount * selectedModule.price;
             let optimizersPrice = optimizersCount > 0 ? (optimizersCount * DATA.optimizerPrice) + DATA.optimizerHubPrice : 0;
             let evStationPrice = (hasEv && !hasStation) ? DATA.evStations[document.getElementById('evStationSelect').value].price : 0;
@@ -645,9 +640,6 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
 
             let equipPrice = modulesPrice + optimizersPrice + inverterPrice + standaloneBatteryPrice + evStationPrice;
             
-            // =====================================
-            // MONTAVIMO IŠSKAIDYMAS
-            // =====================================
             let installLaborPrice = 0;
             let installMaterialsPrice = 0;
             let installTotal = 0;
@@ -661,9 +653,6 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
 
             let totalNoApva = equipPrice + installTotal;
             
-            // =====================================
-            // APVA LOGIKA
-            // =====================================
             let apvaDiscount = 0;
             let apvaWarning = document.getElementById('apvaWarningMsg');
             
@@ -695,7 +684,6 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             let yearlySavings = usedKwhForSavings * kwhPrice;
             let paybackYears = yearlySavings > 0 ? (finalPrice / yearlySavings).toFixed(1) : 0;
 
-            // Atvaizdavimas ekrane
             document.getElementById('roofAreaDisplay').innerText = roofArea.toFixed(1);
             document.getElementById('resEquipPrice').innerText = equipPrice.toFixed(2) + " €";
             
