@@ -48,7 +48,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                             scrolling="no" 
                             marginheight="0" 
                             marginwidth="0" 
-                            src="https://maps.google.com/maps?q=Lithuania&t=&z=6&ie=UTF8&iwloc=&output=embed"
+                            src="https://maps.google.com/maps?q=Lietuva&t=k&z=19&ie=UTF8&iwloc=&output=embed"
                             class="absolute inset-0">
                         </iframe>
                     </div>
@@ -259,7 +259,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                         <div class="flex items-center bg-blue-50 p-3 rounded border border-blue-100 shadow-sm">
                             <div class="w-1/2 pr-2">
                                 <label class="block text-[10px] font-bold text-blue-800 uppercase mb-1">Norimas kiekis (vnt.)</label>
-                                <input type="number" id="manualModuleCount" value="14" min="1" class="w-full border border-blue-300 p-2 rounded font-bold text-lg focus:ring-blue-500 focus:border-blue-500 text-center">
+                                <input type="number" id="manualModuleCount" value="12" min="1" class="w-full border border-blue-300 p-2 rounded font-bold text-lg focus:ring-blue-500 focus:border-blue-500 text-center">
                             </div>
                             <div class="w-1/2 border-l border-blue-200 pl-3 text-center">
                                 <label class="block text-[10px] font-bold text-blue-800 uppercase mb-1">Sistemos galia</label>
@@ -376,10 +376,12 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
     </div>
 
     <script>
+        // GOOGLE MAPS PATAISYMAS (SVARBU!)
         function updateMap() {
             const address = document.getElementById('addressInput').value;
             const iframe = document.getElementById('gmap_canvas');
             if(address.trim() !== '') {
+                // Naudojama teisinga 'q=' sintaksė
                 const searchQuery = encodeURIComponent(address + ", Lietuva");
                 iframe.src = `https://maps.google.com/maps?q=${searchQuery}&t=k&z=19&ie=UTF8&iwloc=&output=embed`;
             }
@@ -651,7 +653,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             let installTotal = 0;
 
             if (hasInstall) {
-                installLaborPrice = totalKw * 130; // NAUJAS DARBO ĮKAINIS (Padidintas)
+                installLaborPrice = 250 + (totalKw * 130); 
                 let materialsRate = isFlatRoof ? 100 : 70;
                 installMaterialsPrice = totalKw * materialsRate;
                 installTotal = installLaborPrice + installMaterialsPrice;
@@ -719,7 +721,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             document.getElementById('resInstallPrice').innerText = installTotal.toFixed(2) + " €";
             let installHtml = '';
             if (hasInstall && installTotal > 0) {
-                installHtml += `<div class="flex justify-between"><span>Meistrų darbas:</span> <span>${installLaborPrice.toFixed(2)} €</span></div>`;
+                installHtml += `<div class="flex justify-between"><span>Meistrų darbas (su atvykimu):</span> <span>${installLaborPrice.toFixed(2)} €</span></div>`;
                 installHtml += `<div class="flex justify-between"><span>Tvirtinimo konstrukcijos:</span> <span>${installMaterialsPrice.toFixed(2)} €</span></div>`;
             }
             document.getElementById('installBreakdown').innerHTML = installHtml;
