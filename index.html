@@ -8,7 +8,7 @@
 </head>
 <body class="bg-slate-100 min-h-screen p-4 md:p-8 font-sans">
 
-    <div class="max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+    <div class="max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden relative">
         
         <div class="bg-blue-900 p-6 text-white flex justify-between items-center">
             <h1 class="text-2xl font-bold">Saulės elektrinės skaičiuoklė</h1>
@@ -351,10 +351,16 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                 </div>
 
                 <div class="bg-white border-2 border-blue-100 rounded-2xl p-6 md:p-8 shadow-xl flex flex-col">
-                    <h3 class="text-xl font-bold text-blue-900 mb-6 border-b border-blue-100 pb-3 flex items-center">
-                        <svg class="w-6 h-6 mr-2 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                        Efektyvumo analizė
-                    </h3>
+                    
+                    <div class="flex justify-between items-center mb-6 border-b border-blue-100 pb-3">
+                        <h3 class="text-xl font-bold text-blue-900 flex items-center">
+                            <svg class="w-6 h-6 mr-2 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            Efektyvumo analizė
+                        </h3>
+                        <button onclick="openLogicModal()" class="text-blue-500 hover:text-blue-700 transition-colors p-1" title="Kaip tai skaičiuojama?">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </button>
+                    </div>
                     
                     <div class="grid grid-cols-2 gap-4 mb-4">
                         <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
@@ -419,7 +425,70 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
         </div>
     </div>
 
+    <div id="logicModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-white/95 backdrop-blur z-10">
+                <h3 class="text-xl font-bold text-blue-900 flex items-center">
+                    <svg class="w-6 h-6 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Kaip mes tai skaičiuojame?
+                </h3>
+                <button onclick="closeLogicModal()" class="text-slate-400 hover:text-slate-600 transition-colors p-2 bg-slate-100 rounded-full">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="p-6 space-y-6 text-sm text-slate-700">
+                
+                <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                    <h4 class="font-bold text-blue-900 mb-2 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path></svg>
+                        Sistemos generacija ir PVGIS
+                    </h4>
+                    <p>Mūsų skaičiuoklė nenaudoja tuščių pažadų. Mes remiamės oficialia Europos Sąjungos <strong>PVGIS duomenų baze</strong>. Sugeneruotas energijos kiekis automatiškai keičiasi priklausomai nuo Jūsų pasirinktos stogo krypties (pietūs generuoja daugiau, šiaurė – mažiau) bei šešėlių įtakos. Jei pasirenkate optimizatorius – šešėlio praradimai yra anuliuojami.</p>
+                </div>
+
+                <div class="bg-purple-50 p-4 rounded-xl border border-purple-100">
+                    <h4 class="font-bold text-purple-900 mb-2 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        Baterijos įkrovimas ir „Miegojimas“
+                    </h4>
+                    <p>Jei pasirenkate sistemą su baterija, mes skaičiuojame krovimo laiką įvertindami realistišką saulės intensyvumą skirtingais metų laikais. Dienos metu baterija susiurbia perteklinę energiją, o naktį atiduoda ją namui. Tai reiškia, kad jūs beveik nenaudojate elektros iš tinklo ir išvengiate ESO pasaugojimo mokesčių.</p>
+                </div>
+
+                <div class="bg-green-50 p-4 rounded-xl border border-green-100">
+                    <h4 class="font-bold text-green-900 mb-2 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Realus sutaupymas (be baterijos)
+                    </h4>
+                    <p>Jei neturite baterijos, laikoma (pagal standartinę Lietuvos statistiką), kad <strong>30%</strong> pagamintos energijos suvartosite iškart, o <strong>70%</strong> atiduosite į tinklą. Atiduotai energijai atsiimti mes pritaikome dabartinį ESO pasaugojimo mokestį, todėl Jūsų matomas „Sutaupymas“ ir „Atsiperkamumas“ atspindi visišką realybę, o ne išpūstą reklamą.</p>
+                </div>
+
+                <div class="bg-red-50 p-4 rounded-xl border border-red-100">
+                    <h4 class="font-bold text-red-900 mb-2 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        APVA ir ESO atidavimo ribojimai
+                    </h4>
+                    <p>Jeigu tinklo operatorius (ESO) apriboja Jūsų atidavimą į tinklą (pvz., iki 1 kW ar 0 kW), o Jūsų elektrinė yra gerokai galingesnė, vasaros vidurdienį susidarys energijos perteklius. Inverteris bus priverstas „nukirpti“ (sumažinti) gamybą. Mūsų skaičiuoklė automatiškai įvertina šiuos praradimus ir atitinkamai pamažina metinę generaciją.</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
     <script>
+        // MODAL LOGIKA
+        function openLogicModal() {
+            document.getElementById('logicModal').classList.remove('hidden');
+        }
+        
+        function closeLogicModal() {
+            document.getElementById('logicModal').classList.add('hidden');
+        }
+
+        // Uždaryti modalą paspaudus fone
+        document.getElementById('logicModal').addEventListener('click', function(e) {
+            if (e.target === this) closeLogicModal();
+        });
+
         function updateMap() {
             const address = document.getElementById('addressInput').value;
             const iframe = document.getElementById('gmap_canvas');
