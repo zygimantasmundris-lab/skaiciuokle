@@ -83,10 +83,12 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
 
                     <div>
                         <label class="block text-sm font-semibold mb-1">Stogo kryptis</label>
-                        <select id="roofDirection" class="w-full border border-slate-300 p-2 rounded">
-                            <option>Pietūs</option>
-                            <option>Pietryčiai / Pietvakariai</option>
-                            <option>Rytai / Vakarai</option>
+                        <select id="roofDirection" class="w-full border border-slate-300 p-2 rounded bg-white shadow-sm transition-all focus:ring-blue-500">
+                            <option value="1000">Pietūs (Geriausia)</option>
+                            <option value="950" selected>Pietryčiai / Pietvakariai</option>
+                            <option value="850">Rytai / Vakarai</option>
+                            <option value="700">Šiaurės Rytai / Šiaurės Vakarai</option>
+                            <option value="600">Šiaurė</option>
                         </select>
                     </div>
 
@@ -160,7 +162,8 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
 
                     <div>
                         <label class="block text-sm font-semibold mb-1">PVGIS (1 kWp generuoja, kWh)</label>
-                        <input type="number" id="pvgis" value="950" class="w-full border p-2 rounded bg-slate-50">
+                        <input type="number" id="pvgis" value="950" class="w-full border p-2 rounded bg-slate-50 transition-all focus:ring-blue-500">
+                        <p class="text-[10px] text-slate-500 mt-1">*Keičiasi automatiškai pagal pasirinktą stogo kryptį.</p>
                     </div>
 
                     <div class="bg-green-50 p-4 rounded border border-green-200 lg:col-span-3 transition-all hover:shadow-md">
@@ -208,9 +211,25 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                 <h2 class="text-lg font-bold text-blue-900 mb-4 border-b pb-2">2. Įrangos komplektacija</h2>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <div id="batteryModeToggleBox" class="hidden col-span-1 md:col-span-2 bg-purple-50 p-4 rounded border border-purple-200 mb-2 transition-all">
+                        <label class="block text-sm font-bold mb-3 text-purple-900 uppercase tracking-wide">Baterijos pasirinkimo būdas</label>
+                        <div class="flex flex-col md:flex-row md:space-x-8 space-y-3 md:space-y-0">
+                            <label class="flex items-center space-x-2 cursor-pointer bg-white px-3 py-2 rounded border border-purple-100 hover:bg-purple-100 transition-colors w-full md:w-auto">
+                                <input type="radio" name="batteryMode" value="kit" checked class="text-purple-600 focus:ring-purple-500 w-5 h-5">
+                                <span class="font-semibold text-purple-900">Rinktis paruoštą komplektą</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer bg-white px-3 py-2 rounded border border-purple-100 hover:bg-purple-100 transition-colors w-full md:w-auto">
+                                <input type="radio" name="batteryMode" value="custom" class="text-purple-600 focus:ring-purple-500 w-5 h-5">
+                                <span class="font-semibold text-purple-900">Komplektuoti atskirai</span>
+                            </label>
+                        </div>
+                    </div>
                     
                     <div id="inverterStandardBox" class="bg-slate-50 p-4 rounded border border-slate-200">
-                        <label class="block text-sm font-bold mb-2 text-slate-800 uppercase tracking-wide">Inverteris</label>
+                        <label class="block text-sm font-bold mb-2 text-slate-800 uppercase tracking-wide">
+                            Inverteris <span id="customInverterHint" class="hidden text-[10px] text-purple-600 font-normal ml-2">(Pasirinkite hibridinį)</span>
+                        </label>
                         <select id="inverterSelect" class="w-full border border-slate-300 p-2 rounded bg-white shadow-sm mb-2"></select>
                         <p id="inverterDesc" class="text-xs text-slate-500 font-medium"></p>
                     </div>
@@ -220,6 +239,13 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                         <label class="block text-sm font-bold mb-2 text-purple-900 uppercase tracking-wide">Inverteris + Kaupiklis (Komplektas)</label>
                         <select id="hybridSelect" class="w-full border border-purple-300 p-2 rounded bg-white shadow-sm font-semibold text-purple-900 mb-2"></select>
                         <p id="hybridDesc" class="text-xs text-purple-700 font-medium opacity-90"></p>
+                    </div>
+
+                    <div id="customBatteryBox" class="hidden bg-purple-50 p-4 rounded border border-purple-200 shadow-sm relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-purple-600 text-white text-[10px] font-bold px-2 py-1 rounded-bl">AKTYVUOTA</div>
+                        <label class="block text-sm font-bold mb-2 text-purple-900 uppercase tracking-wide">Atskiras Kaupiklis (Baterija)</label>
+                        <select id="batterySelect" class="w-full border border-purple-300 p-2 rounded bg-white shadow-sm font-semibold text-purple-900 mb-2"></select>
+                        <p id="batteryDesc" class="text-xs text-purple-700 font-medium opacity-90"></p>
                     </div>
 
                     <div class="bg-slate-50 p-4 rounded border border-slate-200 relative">
@@ -350,7 +376,6 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
     </div>
 
     <script>
-        // GOOGLE MAPS PATAISYMAS (z=19 ir Lietuva)
         function updateMap() {
             const address = document.getElementById('addressInput').value;
             const iframe = document.getElementById('gmap_canvas');
@@ -362,6 +387,13 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
 
         document.getElementById('addressInput').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') updateMap();
+        });
+
+        document.getElementById('roofDirection').addEventListener('change', function() {
+            const selectedValue = this.value;
+            const pvgisInput = document.getElementById('pvgis');
+            pvgisInput.value = selectedValue;
+            calculate(); 
         });
 
         function addRoofRow() {
@@ -436,11 +468,18 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                 { name: "SAJ 10kW + HS2 20kWh", price: 5440.64, desc: "Galingiausias SAJ sprendimas su maksimalia 20kWh baterija viename korpuse. Turi UPS funkciją ir asimetrinį apkrovimą." }
             ],
 
+            batteries: [
+                { name: "FoxESS EP12 PLUS 12.8 kWh LFP", price: 2541.40, capacity: 12.8, desc: "Efektyvus ir patikimas energijos kaupimas su 12.8 kWh talpa (LFP)." },
+                { name: "FoxESS EP6 PLUS 6.4 kWh LFP", price: 1593.34, capacity: 6.4, desc: "Kompaktiškas FoxESS energijos kaupiklis su 6.4 kWh talpa." }
+            ],
+
             modules: [
                 { name: "AIKO Neostar MAH54Mb 450W (Stiklas-plastikas, pilnai juodas)", price: 80.78, area: 1.95, powerW: 450 },
                 { name: "AIKO Neostar MAH54Mb 445W (Stiklas-plastikas, juodas rėmas)", price: 91.89, area: 1.95, powerW: 445 },
                 { name: "LONGI LR7-54HTB 460M 460W (Full Black TOPCon)", price: 71.39, area: 1.95, powerW: 460 },
-                { name: "Jolywood N-Type JW-HD108N R2 500W B (Full Black, dvipusiai)", price: 85.31, area: 1.95, powerW: 500 }
+                { name: "Jolywood N-Type JW-HD108N R2 500W B (Full Black, dvipusiai)", price: 85.31, area: 1.95, powerW: 500 },
+                { name: "Jinko Tiger Neo N-Type 48HL4-M-DB 460W (Pilnai juodi)", price: 80.02, area: 1.95, powerW: 460 },
+                { name: "Jinko 460W N-Type", price: 68.49, area: 1.95, powerW: 460 }
             ],
 
             evStations: [
@@ -473,6 +512,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             const createOptions = (arr) => arr.map((item, index) => `<option value="${index}">${item.name}</option>`).join('');
             document.getElementById('inverterSelect').innerHTML = createOptions(DATA.inverters);
             document.getElementById('hybridSelect').innerHTML = createOptions(DATA.hybrids);
+            document.getElementById('batterySelect').innerHTML = createOptions(DATA.batteries);
             document.getElementById('moduleSelect').innerHTML = createOptions(DATA.modules);
             document.getElementById('evStationSelect').innerHTML = createOptions(DATA.evStations);
         }
@@ -511,6 +551,8 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             const hasStation = document.getElementById('evStationCheck').checked;
 
             const hasBattery = document.getElementById('batteryCheck').checked;
+            const batteryMode = document.querySelector('input[name="batteryMode"]:checked').value;
+            
             const hasApva = document.getElementById('apvaCheck').checked;
             const hasInstall = document.getElementById('installCheck').checked;
 
@@ -521,8 +563,11 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             
             const selInverter = DATA.inverters[document.getElementById('inverterSelect').value];
             const selHybrid = DATA.hybrids[document.getElementById('hybridSelect').value];
+            const selBattery = DATA.batteries[document.getElementById('batterySelect').value];
+            
             document.getElementById('inverterDesc').innerText = selInverter.desc || "";
             document.getElementById('hybridDesc').innerText = selHybrid.desc || "";
+            document.getElementById('batteryDesc').innerText = selBattery.desc || "";
 
             if(optimizersCount > 0) {
                 document.getElementById('optimizerDesc').classList.remove('hidden');
@@ -534,12 +579,26 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             document.getElementById('shadowBox').style.display = hasShadow ? 'block' : 'none';
             document.getElementById('evBox').style.display = hasEv ? 'flex' : 'none';
             
+            // BATERIJOS LOGIKA EKRANE
             if(hasBattery) {
-                document.getElementById('inverterStandardBox').classList.add('hidden');
-                document.getElementById('inverterHybridBox').classList.remove('hidden');
+                document.getElementById('batteryModeToggleBox').classList.remove('hidden');
+                if(batteryMode === 'kit') {
+                    document.getElementById('inverterStandardBox').classList.add('hidden');
+                    document.getElementById('inverterHybridBox').classList.remove('hidden');
+                    document.getElementById('customBatteryBox').classList.add('hidden');
+                    document.getElementById('customInverterHint').classList.add('hidden');
+                } else {
+                    document.getElementById('inverterStandardBox').classList.remove('hidden');
+                    document.getElementById('inverterHybridBox').classList.add('hidden');
+                    document.getElementById('customBatteryBox').classList.remove('hidden');
+                    document.getElementById('customInverterHint').classList.remove('hidden');
+                }
             } else {
+                document.getElementById('batteryModeToggleBox').classList.add('hidden');
                 document.getElementById('inverterStandardBox').classList.remove('hidden');
                 document.getElementById('inverterHybridBox').classList.add('hidden');
+                document.getElementById('customBatteryBox').classList.add('hidden');
+                document.getElementById('customInverterHint').classList.add('hidden');
             }
 
             if(hasEv && !hasStation) {
@@ -565,38 +624,53 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             // =====================================
             let modulesPrice = manualModuleCount * selectedModule.price;
             let optimizersPrice = optimizersCount > 0 ? (optimizersCount * DATA.optimizerPrice) + DATA.optimizerHubPrice : 0;
-            let inverterPrice = hasBattery ? selHybrid.price : selInverter.price;
             let evStationPrice = (hasEv && !hasStation) ? DATA.evStations[document.getElementById('evStationSelect').value].price : 0;
 
-            let equipPrice = modulesPrice + optimizersPrice + inverterPrice + evStationPrice;
+            let inverterPrice = 0;
+            let standaloneBatteryPrice = 0;
+
+            if (hasBattery) {
+                if (batteryMode === 'kit') {
+                    inverterPrice = selHybrid.price;
+                } else {
+                    inverterPrice = selInverter.price;
+                    standaloneBatteryPrice = selBattery.price;
+                }
+            } else {
+                inverterPrice = selInverter.price;
+            }
+
+            let equipPrice = modulesPrice + optimizersPrice + inverterPrice + standaloneBatteryPrice + evStationPrice;
             
             // =====================================
-            // MONTAVIMO IŠSKAIDYMAS (Darbas + Konstrukcijos)
+            // MONTAVIMO IŠSKAIDYMAS
             // =====================================
             let installLaborPrice = 0;
             let installMaterialsPrice = 0;
             let installTotal = 0;
 
             if (hasInstall) {
-                // Darbas: 80 € už kWp
                 installLaborPrice = totalKw * 80;
-                
-                // Medžiagos: Jei skarda/šlaitinis -> 70 €/kWp. Jei plokščias stogas -> 100 €/kWp.
                 let materialsRate = isFlatRoof ? 100 : 70;
                 installMaterialsPrice = totalKw * materialsRate;
-                
                 installTotal = installLaborPrice + installMaterialsPrice;
             }
 
             let totalNoApva = equipPrice + installTotal;
             
-            // APVA logika
+            // =====================================
+            // APVA LOGIKA
+            // =====================================
             let apvaDiscount = 0;
             let apvaWarning = document.getElementById('apvaWarningMsg');
             
             if(hasApva) {
                 if(!hasBattery) {
                     apvaWarning.innerText = "Parama skiriama tik įsirengiant elektrinę KARTU su kaupikliu.";
+                    apvaWarning.classList.remove('hidden');
+                    apvaDiscount = 0;
+                } else if (hasBattery && batteryMode === 'custom' && selBattery.capacity < 10) {
+                    apvaWarning.innerText = "Parama skiriama tik kaupikliams nuo 10 kWh talpos.";
                     apvaWarning.classList.remove('hidden');
                     apvaDiscount = 0;
                 } else if(totalKw < 5) {
@@ -622,14 +696,16 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             document.getElementById('roofAreaDisplay').innerText = roofArea.toFixed(1);
             document.getElementById('resEquipPrice').innerText = equipPrice.toFixed(2) + " €";
             
-            // Išskaidyto sąrašo generavimas HTML (Įranga)
             let breakdownHtml = '';
             if (modulesPrice > 0) {
                 breakdownHtml += `<div class="flex justify-between"><span>Saulės moduliai (${manualModuleCount} vnt.):</span> <span>${modulesPrice.toFixed(2)} €</span></div>`;
             }
             if (inverterPrice > 0) {
-                let invName = hasBattery ? "Hibridinis komplektas:" : "Inverteris:";
+                let invName = (hasBattery && batteryMode === 'kit') ? "Hibridinis komplektas:" : "Inverteris:";
                 breakdownHtml += `<div class="flex justify-between"><span>${invName}</span> <span>${inverterPrice.toFixed(2)} €</span></div>`;
+            }
+            if (standaloneBatteryPrice > 0) {
+                breakdownHtml += `<div class="flex justify-between"><span>Atskiras kaupiklis:</span> <span>${standaloneBatteryPrice.toFixed(2)} €</span></div>`;
             }
             if (optimizersPrice > 0) {
                 breakdownHtml += `<div class="flex justify-between"><span>Optimizatoriai (${optimizersCount} vnt.) + Valdymas:</span> <span>${optimizersPrice.toFixed(2)} €</span></div>`;
@@ -639,7 +715,6 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             }
             document.getElementById('equipBreakdown').innerHTML = breakdownHtml;
 
-            // Montavimo atvaizdavimas
             document.getElementById('resInstallPrice').innerText = installTotal.toFixed(2) + " €";
             let installHtml = '';
             if (hasInstall && installTotal > 0) {
