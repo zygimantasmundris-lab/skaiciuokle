@@ -158,6 +158,10 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                                 <option value="10">10%</option><option value="20">20%</option><option value="30">30%</option>
                                 <option value="40">40%</option><option value="50">50%</option><option value="100">100% (Visiškas)</option>
                             </select>
+                            <p id="shadowOptimizerNote" class="text-[10px] text-green-600 font-bold mt-2 hidden flex items-center">
+                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                Optimizatoriai neutralizuoja šešėlio poveikį!
+                            </p>
                         </div>
                     </div>
 
@@ -599,7 +603,6 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             const selHybrid = DATA.hybrids[document.getElementById('hybridSelect').value];
             const selBattery = DATA.batteries[document.getElementById('batterySelect').value];
             
-            // STOGO DANGOS ĮKAINIS
             let materialsRate = parseFloat(document.getElementById('roofCover').value) || 70;
 
             document.getElementById('inverterDesc').innerText = selInverter.desc || "";
@@ -616,7 +619,6 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             document.getElementById('shadowBox').style.display = hasShadow ? 'block' : 'none';
             document.getElementById('evBox').style.display = hasEv ? 'flex' : 'none';
             
-            // BATERIJOS LOGIKA EKRANE
             if(hasBattery) {
                 document.getElementById('batteryModeToggleBox').classList.remove('hidden');
                 document.getElementById('batteryInfoBox').classList.remove('hidden');
@@ -655,9 +657,17 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             let totalKw = (manualModuleCount * selectedModule.powerW) / 1000;
             document.getElementById('modulePowerDisplay').innerText = totalKw.toFixed(2);
             
-            let generatedKwh = totalKw * pvgis * (1 - (shadowPercent / 100));
+            // ŠEŠĖLIO LOGIKA (Neutralizuojama, jei yra optimizatorių)
+            let actualShadowPercent = shadowPercent;
+            if (hasShadow && optimizersCount > 0) {
+                actualShadowPercent = 0; // Optimizatoriai panaikina šešėlį
+                document.getElementById('shadowOptimizerNote').classList.remove('hidden');
+            } else {
+                document.getElementById('shadowOptimizerNote').classList.add('hidden');
+            }
 
-            // Krovimo laikas
+            let generatedKwh = totalKw * pvgis * (1 - (actualShadowPercent / 100));
+
             let actualBatteryCapacity = 0;
             if(hasBattery && totalKw > 0) {
                 actualBatteryCapacity = (batteryMode === 'kit') ? selHybrid.capacity : selBattery.capacity;
@@ -670,7 +680,6 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                 document.getElementById('resBatAutumn').innerText = autumnTime > 0 ? autumnTime.toFixed(1) : "0";
             }
 
-            // APVA ir ESO apribojimų skaičiavimas fone (Be raudonų tekstų)
             let curtailmentPercent = 0;
             if (hasEso && totalKw > 0) {
                 let ratio = esoAllowedPower / totalKw;
