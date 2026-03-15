@@ -198,7 +198,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
 
                         <label class="flex items-center space-x-3 font-bold text-slate-700 cursor-pointer bg-slate-100 p-3 rounded border border-slate-200 flex-1 hover:bg-slate-200 transition-colors">
                             <input type="checkbox" id="installCheck" class="w-6 h-6 text-slate-600 rounded" checked> 
-                            <span>Reikia montavimo (+600 €)</span>
+                            <span>Reikia montavimo</span>
                         </label>
                     </div>
                 </div>
@@ -277,10 +277,15 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                         <div id="equipBreakdown" class="text-xs text-slate-400 pb-2 border-b border-slate-800 space-y-1">
                             </div>
 
-                        <div class="flex justify-between items-center py-1 border-b border-slate-800">
-                            <span>Montavimo darbai:</span> <span id="resInstallPrice" class="font-semibold text-white">0 €</span>
+                        <div class="pt-2">
+                            <div class="flex justify-between items-center py-1">
+                                <span class="font-bold text-white">Montavimas ir konstrukcijos:</span> <span id="resInstallPrice" class="font-semibold text-white">0 €</span>
+                            </div>
+                            <div id="installBreakdown" class="text-xs text-slate-400 pb-2 border-b border-slate-800 space-y-1">
+                                </div>
                         </div>
-                        <div id="apvaDiscountBox" class="flex justify-between items-center py-2 text-emerald-400 bg-emerald-900/30 px-3 rounded -mx-3">
+
+                        <div id="apvaDiscountBox" class="flex justify-between items-center py-2 text-emerald-400 bg-emerald-900/30 px-3 rounded -mx-3 mt-2">
                             <span class="font-bold flex items-center">
                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                 APVA kompensacija:
@@ -345,6 +350,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
     </div>
 
     <script>
+        // GOOGLE MAPS PATAISYMAS (z=19 ir Lietuva)
         function updateMap() {
             const address = document.getElementById('addressInput').value;
             const iframe = document.getElementById('gmap_canvas');
@@ -358,9 +364,6 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             if (e.key === 'Enter') updateMap();
         });
 
-        // ==========================================
-        // KELIU ŠLAITŲ PRIDĖJIMO LOGIKA
-        // ==========================================
         function addRoofRow() {
             const container = document.getElementById('roofRowsContainer');
             const rowHtml = `
@@ -401,9 +404,6 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             }
         }
 
-        // ==========================================
-        // DATA IR KAINOS
-        // ==========================================
         const DATA = {
             inverters: [
                 { name: "Solis S5-GR3P5K 5kW (Trifazis)", price: 529.98, desc: "Patikimas trifazis inverteris su dviem MPPT išėjimais. Pasižymi itin aukštu efektyvumu ir tinka standartinėms namų saulės elektrinėms." },
@@ -453,7 +453,6 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             
             optimizerPrice: 52.27, 
             optimizerHubPrice: 278.30, 
-            installPrice: 600,
             apvaFixedDiscount: 5012.19 
         };
 
@@ -494,7 +493,6 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             const kwhPrice = parseFloat(document.getElementById('kwhPrice').value) || 0;
             const pvgis = parseFloat(document.getElementById('pvgis').value) || 0;
             
-            // Kelių šlaitų ploto sumavimas
             let roofArea = 0;
             const lengths = document.querySelectorAll('.roof-length');
             const widths = document.querySelectorAll('.roof-width');
@@ -516,6 +514,8 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             const hasApva = document.getElementById('apvaCheck').checked;
             const hasInstall = document.getElementById('installCheck').checked;
 
+            const isFlatRoof = document.querySelector('input[name="roofType"]:checked').value === 'plokscias';
+
             const optimizersCount = parseInt(document.getElementById('optimizerSelect').value);
             const selectedModule = DATA.modules[document.getElementById('moduleSelect').value];
             
@@ -524,7 +524,6 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             document.getElementById('inverterDesc').innerText = selInverter.desc || "";
             document.getElementById('hybridDesc').innerText = selHybrid.desc || "";
 
-            // Optimizatorių prierašo logika
             if(optimizersCount > 0) {
                 document.getElementById('optimizerDesc').classList.remove('hidden');
             } else {
@@ -562,7 +561,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             let generatedKwh = totalKw * pvgis * (1 - (shadowPercent / 100));
 
             // =====================================
-            // KAINŲ IŠSKAIDYMAS
+            // KAINŲ IŠSKAIDYMAS (Įranga)
             // =====================================
             let modulesPrice = manualModuleCount * selectedModule.price;
             let optimizersPrice = optimizersCount > 0 ? (optimizersCount * DATA.optimizerPrice) + DATA.optimizerHubPrice : 0;
@@ -570,8 +569,26 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             let evStationPrice = (hasEv && !hasStation) ? DATA.evStations[document.getElementById('evStationSelect').value].price : 0;
 
             let equipPrice = modulesPrice + optimizersPrice + inverterPrice + evStationPrice;
-            let installCost = hasInstall ? DATA.installPrice : 0;
-            let totalNoApva = equipPrice + installCost;
+            
+            // =====================================
+            // MONTAVIMO IŠSKAIDYMAS (Darbas + Konstrukcijos)
+            // =====================================
+            let installLaborPrice = 0;
+            let installMaterialsPrice = 0;
+            let installTotal = 0;
+
+            if (hasInstall) {
+                // Darbas: 80 € už kWp
+                installLaborPrice = totalKw * 80;
+                
+                // Medžiagos: Jei skarda/šlaitinis -> 70 €/kWp. Jei plokščias stogas -> 100 €/kWp.
+                let materialsRate = isFlatRoof ? 100 : 70;
+                installMaterialsPrice = totalKw * materialsRate;
+                
+                installTotal = installLaborPrice + installMaterialsPrice;
+            }
+
+            let totalNoApva = equipPrice + installTotal;
             
             // APVA logika
             let apvaDiscount = 0;
@@ -605,7 +622,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             document.getElementById('roofAreaDisplay').innerText = roofArea.toFixed(1);
             document.getElementById('resEquipPrice').innerText = equipPrice.toFixed(2) + " €";
             
-            // Išskaidyto sąrašo generavimas HTML
+            // Išskaidyto sąrašo generavimas HTML (Įranga)
             let breakdownHtml = '';
             if (modulesPrice > 0) {
                 breakdownHtml += `<div class="flex justify-between"><span>Saulės moduliai (${manualModuleCount} vnt.):</span> <span>${modulesPrice.toFixed(2)} €</span></div>`;
@@ -622,7 +639,14 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             }
             document.getElementById('equipBreakdown').innerHTML = breakdownHtml;
 
-            document.getElementById('resInstallPrice').innerText = installCost.toFixed(2) + " €";
+            // Montavimo atvaizdavimas
+            document.getElementById('resInstallPrice').innerText = installTotal.toFixed(2) + " €";
+            let installHtml = '';
+            if (hasInstall && installTotal > 0) {
+                installHtml += `<div class="flex justify-between"><span>Meistrų darbas:</span> <span>${installLaborPrice.toFixed(2)} €</span></div>`;
+                installHtml += `<div class="flex justify-between"><span>Tvirtinimo konstrukcijos:</span> <span>${installMaterialsPrice.toFixed(2)} €</span></div>`;
+            }
+            document.getElementById('installBreakdown').innerHTML = installHtml;
             
             if(hasApva && apvaDiscount > 0) {
                 document.getElementById('apvaDiscountBox').classList.remove('hidden');
