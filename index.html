@@ -92,6 +92,17 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                         </select>
                     </div>
 
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Stogo danga</label>
+                        <select id="roofCover" class="w-full border border-slate-300 p-2 rounded bg-white shadow-sm transition-all focus:ring-blue-500">
+                            <option value="70">Trapecinė / Valcuota skarda</option>
+                            <option value="70">Skarda (Čerpių imitacija)</option>
+                            <option value="75">Šiferis / Bituminė danga</option>
+                            <option value="85">Keraminės / Betoninės čerpės</option>
+                            <option value="100">Plokščias stogas (Balastinė)</option>
+                        </select>
+                    </div>
+
                     <div class="col-span-1 md:col-span-2 bg-slate-50 p-3 rounded border border-slate-200">
                         <div class="flex justify-between items-center mb-3 border-b border-slate-200 pb-2">
                             <label class="block text-sm font-semibold text-slate-700">Stogo išmatavimai</label>
@@ -397,7 +408,6 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
     </div>
 
     <script>
-        // GOOGLE MAPS TEISINGA NUORODA
         function updateMap() {
             const address = document.getElementById('addressInput').value;
             const iframe = document.getElementById('gmap_canvas');
@@ -582,8 +592,6 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             const hasApva = document.getElementById('apvaCheck').checked;
             const hasInstall = document.getElementById('installCheck').checked;
 
-            const isFlatRoof = document.querySelector('input[name="roofType"]:checked').value === 'plokscias';
-
             const optimizersCount = parseInt(document.getElementById('optimizerSelect').value);
             const selectedModule = DATA.modules[document.getElementById('moduleSelect').value];
             
@@ -591,6 +599,9 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             const selHybrid = DATA.hybrids[document.getElementById('hybridSelect').value];
             const selBattery = DATA.batteries[document.getElementById('batterySelect').value];
             
+            // STOGO DANGOS ĮKAINIS
+            let materialsRate = parseFloat(document.getElementById('roofCover').value) || 70;
+
             document.getElementById('inverterDesc').innerText = selInverter.desc || "";
             document.getElementById('hybridDesc').innerText = selHybrid.desc || "";
             document.getElementById('batteryDesc').innerText = selBattery.desc || "";
@@ -720,9 +731,8 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             if (hasInstall) {
                 installLaborPrice = 250 + (totalKw * 130); 
                 if (installLaborPrice > 1200) {
-                    installLaborPrice = 1200; // NAUJOS LUBOS MEISTRŲ DARBUI
+                    installLaborPrice = 1200; 
                 }
-                let materialsRate = isFlatRoof ? 100 : 70;
                 installMaterialsPrice = totalKw * materialsRate;
                 installTotal = installLaborPrice + installMaterialsPrice;
             }
