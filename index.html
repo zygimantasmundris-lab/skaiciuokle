@@ -270,9 +270,12 @@
                     </h3>
                     
                     <div class="space-y-3 text-sm text-slate-300 mb-8 relative z-10">
-                        <div class="flex justify-between items-center py-1 border-b border-slate-800">
-                            <span>Įrangos kaina:</span> <span id="resEquipPrice" class="font-semibold text-white">0 €</span>
+                        <div class="flex justify-between items-center py-1">
+                            <span class="font-bold text-white">Įrangos kaina:</span> <span id="resEquipPrice" class="font-semibold text-white">0 €</span>
                         </div>
+                        <div id="equipBreakdown" class="text-xs text-slate-400 pb-2 border-b border-slate-800 space-y-1">
+                            </div>
+
                         <div class="flex justify-between items-center py-1 border-b border-slate-800">
                             <span>Montavimo darbai:</span> <span id="resInstallPrice" class="font-semibold text-white">0 €</span>
                         </div>
@@ -288,7 +291,7 @@
                     <div class="pt-6 border-t border-slate-700 relative z-10">
                         <div class="flex justify-between items-end mb-2">
                             <p class="text-sm text-slate-400">Kaina be paramos:</p>
-                            <span id="resTotalNoApva" class="font-bold text-slate-300 line-through">0 €</span>
+                            <span id="resTotalNoApva" class="font-bold text-slate-300">0 €</span>
                         </div>
                         <div class="bg-blue-600 rounded-xl p-4 text-center shadow-inner mt-4">
                             <p class="text-blue-200 text-sm font-bold uppercase tracking-widest mb-1">Galutinė investicija</p>
@@ -557,28 +560,19 @@
             
             let generatedKwh = totalKw * pvgis * (1 - (shadowPercent / 100));
 
-            // KAINŲ SKAIČIAVIMAS
-            let equipPrice = 0;
-            equipPrice += (manualModuleCount * selectedModule.price);
-            
-            if(optimizersCount > 0) {
-                equipPrice += (optimizersCount * DATA.optimizerPrice); // Pridedame kiekvieno optimizatoriaus kainą
-                equipPrice += DATA.optimizerHubPrice; // Automatiškai pridedame rinkinio kainą (CCA+TAP+PS)
-            }
-            
-            if(hasBattery) {
-                equipPrice += selHybrid.price;
-            } else {
-                equipPrice += selInverter.price;
-            }
+            // =====================================
+            // KAINŲ IŠSKAIDYMAS
+            // =====================================
+            let modulesPrice = manualModuleCount * selectedModule.price;
+            let optimizersPrice = optimizersCount > 0 ? (optimizersCount * DATA.optimizerPrice) + DATA.optimizerHubPrice : 0;
+            let inverterPrice = hasBattery ? selHybrid.price : selInverter.price;
+            let evStationPrice = (hasEv && !hasStation) ? DATA.evStations[document.getElementById('evStationSelect').value].price : 0;
 
-            if(hasEv && !hasStation) {
-                equipPrice += DATA.evStations[document.getElementById('evStationSelect').value].price;
-            }
-
+            let equipPrice = modulesPrice + optimizersPrice + inverterPrice + evStationPrice;
             let installCost = hasInstall ? DATA.installPrice : 0;
             let totalNoApva = equipPrice + installCost;
             
+            // APVA logika
             let apvaDiscount = 0;
             let apvaWarning = document.getElementById('apvaWarningMsg');
             
@@ -606,9 +600,27 @@
             let yearlySavings = usedKwhForSavings * kwhPrice;
             let paybackYears = yearlySavings > 0 ? (finalPrice / yearlySavings).toFixed(1) : 0;
 
+            // Atvaizdavimas ekrane
             document.getElementById('roofAreaDisplay').innerText = roofArea.toFixed(1);
-            
             document.getElementById('resEquipPrice').innerText = equipPrice.toFixed(2) + " €";
+            
+            // Išskaidyto sąrašo generavimas HTML
+            let breakdownHtml = '';
+            if (modulesPrice > 0) {
+                breakdownHtml += `<div class="flex justify-between"><span>Saulės moduliai (${manualModuleCount} vnt.):</span> <span>${modulesPrice.toFixed(2)} €</span></div>`;
+            }
+            if (inverterPrice > 0) {
+                let invName = hasBattery ? "Hibridinis komplektas:" : "Inverteris:";
+                breakdownHtml += `<div class="flex justify-between"><span>${invName}</span> <span>${inverterPrice.toFixed(2)} €</span></div>`;
+            }
+            if (optimizersPrice > 0) {
+                breakdownHtml += `<div class="flex justify-between"><span>Optimizatoriai (${optimizersCount} vnt.) + Valdymas:</span> <span>${optimizersPrice.toFixed(2)} €</span></div>`;
+            }
+            if (evStationPrice > 0) {
+                breakdownHtml += `<div class="flex justify-between"><span>Krovimo stotelė:</span> <span>${evStationPrice.toFixed(2)} €</span></div>`;
+            }
+            document.getElementById('equipBreakdown').innerHTML = breakdownHtml;
+
             document.getElementById('resInstallPrice').innerText = installCost.toFixed(2) + " €";
             
             if(hasApva && apvaDiscount > 0) {
