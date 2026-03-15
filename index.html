@@ -48,7 +48,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                             scrolling="no" 
                             marginheight="0" 
                             marginwidth="0" 
-                            src="https://maps.google.com/maps?q=Lietuva&t=k&z=6&ie=UTF8&iwloc=&output=embed"
+                            src="https://maps.google.com/maps?q=Lithuania&t=&z=6&ie=UTF8&iwloc=&output=embed"
                             class="absolute inset-0">
                         </iframe>
                     </div>
@@ -132,7 +132,8 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                         </label>
                         <div id="esoBox" class="hidden mt-3 pt-3 border-t border-blue-200">
                             <label class="text-xs font-semibold text-blue-800 uppercase">Leistina generuoti galia:</label>
-                            <select id="esoPower" class="w-full border-blue-300 p-2 rounded text-sm mt-1 bg-white"></select>
+                            <select id="esoPower" class="w-full border-blue-300 p-2 rounded text-sm mt-1 bg-white">
+                                </select>
                         </div>
                     </div>
 
@@ -341,7 +342,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                         Efektyvumo analizė
                     </h3>
                     
-                    <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="grid grid-cols-2 gap-4 mb-4">
                         <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
                             <p class="text-[10px] uppercase font-bold text-slate-500 mb-1">Bendras poreikis</p>
                             <p class="text-2xl font-black text-slate-800"><span id="resTotalConsumption">0</span><span class="text-sm text-slate-500 font-normal ml-1">kWh</span></p>
@@ -351,8 +352,19 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                         <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
                             <p class="text-[10px] uppercase font-bold text-blue-600 mb-1">Sistemos galia</p>
                             <p class="text-2xl font-black text-blue-900"><span id="resKw">0</span><span class="text-sm text-blue-600 font-normal ml-1">kWp</span></p>
-                            <p class="text-[10px] text-blue-600 mt-1">Generuos: <span id="resGenerated" class="font-bold">0</span> kWh/m.</p>
+                            <p class="text-[10px] text-blue-600 mt-1 flex flex-col">
+                                <span>Generuos: <span id="resGenerated" class="font-bold">0</span> kWh/m.</span>
+                                <span id="curtailmentWarning" class="text-red-500 font-bold hidden cursor-help" title="Dėl APVA ir ESO apribojimų vasarą dalis saulės energijos bus nepanaudota, nes nebus kur jos atiduoti. Rekomenduojame didinti bateriją arba elektrinį vandens šildymą."> (-<span id="curtailmentPercent">0</span>% dėl tinklo limitų)</span>
+                            </p>
                         </div>
+                    </div>
+
+                    <div id="batteryInfoBox" class="hidden bg-purple-50 p-3 rounded-lg border border-purple-100 mb-4 flex justify-between items-center text-sm">
+                        <span class="text-purple-800 font-semibold flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            Krovimo laikas (vidurdienį):
+                        </span>
+                        <span class="font-bold text-purple-900">~<span id="resBatteryChargeTime">0</span> val.</span>
                     </div>
 
                     <div class="mt-auto space-y-4">
@@ -360,6 +372,9 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                             <div>
                                 <p class="text-xs uppercase font-bold text-green-700 mb-1">Sutaupysite per metus</p>
                                 <p class="text-3xl font-black text-green-600">~ <span id="resSavings">0</span> €</p>
+                                <p id="esoStorageNote" class="text-[10px] text-green-800 font-medium mt-1 leading-tight hidden">
+                                    *Įskaičiuotas ESO mokestis už pasaugojimą, atiduodant dalį energijos į tinklą.
+                                </p>
                             </div>
                             <svg class="w-10 h-10 text-green-300 opacity-50" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
                         </div>
@@ -382,7 +397,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             const iframe = document.getElementById('gmap_canvas');
             if(address.trim() !== '') {
                 const searchQuery = encodeURIComponent(address + ", Lietuva");
-                iframe.src = `https://maps.google.com/maps?q=${searchQuery}&t=k&z=19&ie=UTF8&iwloc=&output=embed`;
+                iframe.src = `https://maps.google.com/maps?q=$?q=${searchQuery}&t=k&z=19&ie=UTF8&iwloc=&output=embed`;
             }
         }
 
@@ -460,14 +475,14 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             ],
             
             hybrids: [
-                { name: "FoxESS 10kW + FoxESS EP12 11.52kWh", price: 3705.13, desc: "Aukščiausios klasės FoxESS hibridinė sistema su aukštos įtampos (LiFePO4) baterija. Modulinis dizainas užtikrina ilgaamžiškumą." },
-                { name: "FoxESS 15kW + FoxESS EP12", price: 3969.27, desc: "Galingas sprendimas: 15kW hibridinė sistema su aukštos įtampos (LiFePO4) baterija. Modulinis dizainas užtikrina ilgaamžiškumą." },
-                { name: "SAJ 8kW + HS2 10kWh", price: 3320.72, desc: "Estetiškas „Viskas viename“ (All-in-one) sprendimas, kur inverteris ir baterija yra viename elegantiškame korpuse. Turi UPS funkciją." },
-                { name: "SAJ 8kW + HS2 15kWh", price: 4353.10, desc: "Estetiškas „Viskas viename“ sprendimas. Didesnė baterijos talpa ir integruota UPS funkcija (apsauga nuo elektros dingimo)." },
-                { name: "SAJ 8kW + HS2 20kWh", price: 5385.47, desc: "Maksimalus „Viskas viename“ sprendimas. Milžiniškas 20kWh energijos rezervas ir asimetrinis apkrovimo palaikymas." },
-                { name: "SAJ 10kW + HS2 10kWh", price: 3375.90, desc: "Galingas „Viskas viename“ sprendimas su UPS funkcija ir asimetriniu apkrovimu." },
-                { name: "SAJ 10kW + HS2 15kWh", price: 4408.27, desc: "10kW hibridinis inverteris ir 15kWh baterija viename elegantiškame korpuse. Turi UPS funkciją." },
-                { name: "SAJ 10kW + HS2 20kWh", price: 5440.64, desc: "Galingiausias SAJ sprendimas su maksimalia 20kWh baterija viename korpuse. Turi UPS funkciją ir asimetrinį apkrovimą." }
+                { name: "FoxESS 10kW + FoxESS EP12 11.52kWh", price: 3705.13, capacity: 11.52, desc: "Aukščiausios klasės FoxESS hibridinė sistema su aukštos įtampos (LiFePO4) baterija. Modulinis dizainas užtikrina ilgaamžiškumą." },
+                { name: "FoxESS 15kW + FoxESS EP12", price: 3969.27, capacity: 11.52, desc: "Galingas sprendimas: 15kW hibridinė sistema su aukštos įtampos (LiFePO4) baterija. Modulinis dizainas užtikrina ilgaamžiškumą." },
+                { name: "SAJ 8kW + HS2 10kWh", price: 3320.72, capacity: 10, desc: "Estetiškas „Viskas viename“ (All-in-one) sprendimas, kur inverteris ir baterija yra viename elegantiškame korpuse. Turi UPS funkciją." },
+                { name: "SAJ 8kW + HS2 15kWh", price: 4353.10, capacity: 15, desc: "Estetiškas „Viskas viename“ sprendimas. Didesnė baterijos talpa ir integruota UPS funkcija (apsauga nuo elektros dingimo)." },
+                { name: "SAJ 8kW + HS2 20kWh", price: 5385.47, capacity: 20, desc: "Maksimalus „Viskas viename“ sprendimas. Milžiniškas 20kWh energijos rezervas ir asimetrinis apkrovimo palaikymas." },
+                { name: "SAJ 10kW + HS2 10kWh", price: 3375.90, capacity: 10, desc: "Galingas „Viskas viename“ sprendimas su UPS funkcija ir asimetriniu apkrovimu." },
+                { name: "SAJ 10kW + HS2 15kWh", price: 4408.27, capacity: 15, desc: "10kW hibridinis inverteris ir 15kWh baterija viename elegantiškame korpuse. Turi UPS funkciją." },
+                { name: "SAJ 10kW + HS2 20kWh", price: 5440.64, capacity: 20, desc: "Galingiausias SAJ sprendimas su maksimalia 20kWh baterija viename korpuse. Turi UPS funkciją ir asimetrinį apkrovimą." }
             ],
 
             batteries: [
@@ -494,13 +509,14 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             
             optimizerPrice: 52.27, 
             optimizerHubPrice: 278.30, 
-            apvaFixedDiscount: 5012.19 
+            apvaFixedDiscount: 5012.19,
+            esoStorageFee: 0.054 // Naujas tarifas ESO pasaugojimui
         };
 
         function populateKwSelects() {
-            let options = '';
+            let options = '<option value="0">0 kW (Zero Export)</option>';
             for(let i=1; i<=30; i++) options += `<option value="${i}">${i} kW</option>`;
-            document.getElementById('gridPower').innerHTML = options;
+            document.getElementById('gridPower').innerHTML = options.replace('<option value="0">0 kW (Zero Export)</option>', '');
             document.getElementById('gridPower').value = "10";
             document.getElementById('esoPower').innerHTML = options;
             document.getElementById('esoPower').value = "10";
@@ -545,6 +561,8 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             }
             
             const hasEso = document.getElementById('esoCheck').checked;
+            const esoAllowedPower = hasEso ? parseFloat(document.getElementById('esoPower').value) : 0;
+            
             const hasShadow = document.getElementById('shadowCheck').checked;
             const shadowPercent = hasShadow ? parseFloat(document.getElementById('shadowPercent').value) : 0;
             
@@ -581,8 +599,10 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             document.getElementById('shadowBox').style.display = hasShadow ? 'block' : 'none';
             document.getElementById('evBox').style.display = hasEv ? 'flex' : 'none';
             
+            // BATERIJOS LOGIKA EKRANE
             if(hasBattery) {
                 document.getElementById('batteryModeToggleBox').classList.remove('hidden');
+                document.getElementById('batteryInfoBox').classList.remove('hidden');
                 if(batteryMode === 'kit') {
                     document.getElementById('inverterStandardBox').classList.add('hidden');
                     document.getElementById('inverterHybridBox').classList.remove('hidden');
@@ -596,6 +616,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                 }
             } else {
                 document.getElementById('batteryModeToggleBox').classList.add('hidden');
+                document.getElementById('batteryInfoBox').classList.add('hidden');
                 document.getElementById('inverterStandardBox').classList.remove('hidden');
                 document.getElementById('inverterHybridBox').classList.add('hidden');
                 document.getElementById('customBatteryBox').classList.add('hidden');
@@ -618,8 +639,74 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             let totalKw = (manualModuleCount * selectedModule.powerW) / 1000;
             document.getElementById('modulePowerDisplay').innerText = totalKw.toFixed(2);
             
+            // =====================================
+            // INŽINERINIAI SKAIČIAVIMAI (NAUJA!)
+            // =====================================
+            
+            // 1. Bazinė generacija
             let generatedKwh = totalKw * pvgis * (1 - (shadowPercent / 100));
+            
+            // 2. Krovimo laikas ir talpa
+            let actualBatteryCapacity = 0;
+            if(hasBattery) {
+                actualBatteryCapacity = (batteryMode === 'kit') ? selHybrid.capacity : selBattery.capacity;
+                let effectiveChargePower = totalKw * 0.8; // 80% realus efektyvumas
+                let chargeTime = actualBatteryCapacity / effectiveChargePower;
+                document.getElementById('resBatteryChargeTime').innerText = chargeTime.toFixed(1);
+            }
 
+            // 3. ESO Apribojimai ir "Curtailment" (Nukirpimas)
+            let curtailmentPercent = 0;
+            let curtailmentWarning = document.getElementById('curtailmentWarning');
+            
+            if (hasEso && totalKw > 0) {
+                let ratio = esoAllowedPower / totalKw;
+                // Jei ESO leistina galia daug mažesnė nei saulės elektrinė...
+                if (ratio < 0.6) {
+                    if (ratio < 0.2) curtailmentPercent = 35; // Pvz: 10kW sistema, bet atiduoda tik 1-2kW
+                    else if (ratio < 0.4) curtailmentPercent = 20; 
+                    else curtailmentPercent = 10;
+                    
+                    // Baterija šiek tiek sušvelnina šį praradimą
+                    if(hasBattery) curtailmentPercent -= (actualBatteryCapacity > 10 ? 10 : 5);
+                    
+                    if (curtailmentPercent < 0) curtailmentPercent = 0;
+                }
+            } else if (!hasEso && totalKw > 0) {
+                // Visiškai neatiduoda į tinklą (Off-grid tipo Zero Export)
+                curtailmentPercent = hasBattery ? 40 : 80; // Be baterijos prarandama 80% saulės.
+            }
+
+            if(curtailmentPercent > 0) {
+                curtailmentWarning.classList.remove('hidden');
+                document.getElementById('curtailmentPercent').innerText = curtailmentPercent;
+                generatedKwh = generatedKwh * (1 - (curtailmentPercent / 100));
+            } else {
+                curtailmentWarning.classList.add('hidden');
+            }
+
+            // 4. Sutaupymo skaičiavimas (su/be baterijos)
+            let usedKwhForSavings = Math.min(generatedKwh, totalCons); 
+            let yearlySavings = 0;
+            
+            if(hasBattery) {
+                // Turi bateriją: labai aukštas momentinis suvartojimas, rečiau naudoja tinklą
+                document.getElementById('esoStorageNote').classList.add('hidden');
+                yearlySavings = usedKwhForSavings * kwhPrice;
+            } else {
+                // Neturi baterijos: pritaikome standartinį ESO modelį (30% tiesiogiai, 70% per ESO)
+                document.getElementById('esoStorageNote').classList.remove('hidden');
+                let directUsage = usedKwhForSavings * 0.3;
+                let esoUsage = usedKwhForSavings * 0.7;
+                
+                let savingsFromDirect = directUsage * kwhPrice;
+                let savingsFromEso = esoUsage * (kwhPrice - DATA.esoStorageFee); // Sumažintas sutaupymas
+                yearlySavings = savingsFromDirect + savingsFromEso;
+            }
+
+            // =====================================
+            // KAINŲ IŠSKAIDYMAS (Įranga)
+            // =====================================
             let modulesPrice = manualModuleCount * selectedModule.price;
             let optimizersPrice = optimizersCount > 0 ? (optimizersCount * DATA.optimizerPrice) + DATA.optimizerHubPrice : 0;
             let evStationPrice = (hasEv && !hasStation) ? DATA.evStations[document.getElementById('evStationSelect').value].price : 0;
@@ -640,6 +727,9 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
 
             let equipPrice = modulesPrice + optimizersPrice + inverterPrice + standaloneBatteryPrice + evStationPrice;
             
+            // =====================================
+            // MONTAVIMO IŠSKAIDYMAS
+            // =====================================
             let installLaborPrice = 0;
             let installMaterialsPrice = 0;
             let installTotal = 0;
@@ -653,6 +743,9 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
 
             let totalNoApva = equipPrice + installTotal;
             
+            // =====================================
+            // APVA LOGIKA
+            // =====================================
             let apvaDiscount = 0;
             let apvaWarning = document.getElementById('apvaWarningMsg');
             
@@ -680,10 +773,9 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             let finalPrice = totalNoApva - apvaDiscount;
             if (finalPrice < 0) finalPrice = 0; 
 
-            let usedKwhForSavings = Math.min(generatedKwh, totalCons); 
-            let yearlySavings = usedKwhForSavings * kwhPrice;
             let paybackYears = yearlySavings > 0 ? (finalPrice / yearlySavings).toFixed(1) : 0;
 
+            // Atvaizdavimas ekrane
             document.getElementById('roofAreaDisplay').innerText = roofArea.toFixed(1);
             document.getElementById('resEquipPrice').innerText = equipPrice.toFixed(2) + " €";
             
