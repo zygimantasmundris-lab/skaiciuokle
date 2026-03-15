@@ -48,7 +48,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                             scrolling="no" 
                             marginheight="0" 
                             marginwidth="0" 
-                            src="https://maps.google.com/maps?q=Lietuva&t=k&z=18&ie=UTF8&iwloc=&output=embed"
+                            src="https://maps.google.com/maps?q=Lithuania&t=&z=6&ie=UTF8&iwloc=&output=embed"
                             class="absolute inset-0">
                         </iframe>
                     </div>
@@ -397,6 +397,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
     </div>
 
     <script>
+        // GOOGLE MAPS TEISINGA NUORODA
         function updateMap() {
             const address = document.getElementById('addressInput').value;
             const iframe = document.getElementById('gmap_canvas');
@@ -658,7 +659,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                 document.getElementById('resBatAutumn').innerText = autumnTime > 0 ? autumnTime.toFixed(1) : "0";
             }
 
-            // APVA ir ESO apribojimų skaičiavimas fone
+            // APVA ir ESO apribojimų skaičiavimas fone (Be raudonų tekstų)
             let curtailmentPercent = 0;
             if (hasEso && totalKw > 0) {
                 let ratio = esoAllowedPower / totalKw;
@@ -718,6 +719,9 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
 
             if (hasInstall) {
                 installLaborPrice = 250 + (totalKw * 130); 
+                if (installLaborPrice > 1200) {
+                    installLaborPrice = 1200; // NAUJOS LUBOS MEISTRŲ DARBUI
+                }
                 let materialsRate = isFlatRoof ? 100 : 70;
                 installMaterialsPrice = totalKw * materialsRate;
                 installTotal = installLaborPrice + installMaterialsPrice;
