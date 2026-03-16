@@ -303,6 +303,9 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                             <label class="block text-sm font-bold mb-2 text-green-900 uppercase tracking-wide">Krovimo stotelė</label>
                             <select id="evStationSelect" class="w-full border border-green-300 p-2 rounded bg-white shadow-sm font-semibold text-green-900"></select>
                         </div>
+                        
+                        <div id="salesPitchesBox" class="col-span-1 md:col-span-2 bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-xl border border-blue-100 hidden mt-2 shadow-sm transition-all">
+                            </div>
 
                     </div>
                 </div>
@@ -693,12 +696,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                 { name: "FoxESS L11P EV 11kW", price: 457.38, phase: 3 },
                 { name: "Teltonika TeltoCharge 11kW (Type 2, 5m kabelis)", price: 870.27, phase: 3 },
                 { name: "Teltonika TeltoCharge 22kW (Type 2, 5m kabelis)", price: 904.02, phase: 3 }
-            ],
-            
-            optimizerPrice: 52.27, 
-            optimizerHubPrice: 278.30, 
-            apvaFixedDiscount: 5012.19,
-            esoStorageFee: 0.054 
+            ]
         };
 
         function populateKwSelects() {
@@ -932,15 +930,19 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             let inverterPrice = 0;
             let standaloneBatteryPrice = 0;
 
+            let activeInverterName = "";
             if (hasBattery) {
                 if (batteryMode === 'kit' && selHybrid) {
                     inverterPrice = selHybrid.price;
+                    activeInverterName = selHybrid.name;
                 } else if (selInverter && selBattery) {
                     inverterPrice = selInverter.price;
                     standaloneBatteryPrice = selBattery.price;
+                    activeInverterName = selInverter.name;
                 }
             } else if (selInverter) {
                 inverterPrice = selInverter.price;
+                activeInverterName = selInverter.name;
             }
 
             let equipPrice = modulesPrice + optimizersPrice + inverterPrice + standaloneBatteryPrice + evStationPrice;
@@ -1003,8 +1005,8 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                 breakdownHtml += `<div class="flex justify-between"><span>Saulės moduliai (${manualModuleCount} vnt.):</span> <span>${modulesPrice.toFixed(2)} €</span></div>`;
             }
             if (inverterPrice > 0) {
-                let invName = (hasBattery && batteryMode === 'kit') ? "Hibridinis komplektas:" : "Inverteris:";
-                breakdownHtml += `<div class="flex justify-between"><span>${invName}</span> <span>${inverterPrice.toFixed(2)} €</span></div>`;
+                let invNameLabel = (hasBattery && batteryMode === 'kit') ? "Hibridinis komplektas:" : "Inverteris:";
+                breakdownHtml += `<div class="flex justify-between"><span>${invNameLabel}</span> <span>${inverterPrice.toFixed(2)} €</span></div>`;
             }
             if (standaloneBatteryPrice > 0) {
                 breakdownHtml += `<div class="flex justify-between"><span>Atskiras kaupiklis:</span> <span>${standaloneBatteryPrice.toFixed(2)} €</span></div>`;
@@ -1049,6 +1051,59 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             document.getElementById('resSavings').innerText = yearlySavings.toFixed(0);
             document.getElementById('resPayback').innerText = paybackYears;
 
+            // ==========================================
+            // PARDAVIMO ARGUMENTŲ (PITCHES) LOGIKA
+            // ==========================================
+            let pitches = [];
+            
+            // Inverterio / Hibrido argumentai
+            if (activeInverterName.includes('Solis')) {
+                pitches.push('<strong>Solis inverteriai:</strong> Laiko patikrintas darbinis arklys. Vienas populiariausių ir patikimiausių pasirinkimų Lietuvoje – įranga, kurią sumontuoji ir pamiršti.');
+            } else if (activeInverterName.includes('FoxESS')) {
+                pitches.push('<strong>FoxESS:</strong> Inovatorių ir baterijų lyderis. Itin anksti „atsibunda“ ryte, turi tobulą ekosistemą, kur viskas (elektrinė, baterija, stotelė) valdoma vienoje programėlėje.');
+            } else if (activeInverterName.includes('SAJ')) {
+                pitches.push('<strong>SAJ:</strong> Estetika ir „Viskas viename“. Inverteris ir baterija integruoti į vieną gražų korpusą – idealu namo vidui. Turi galingą UPS funkciją dingus elektrai.');
+            } else if (activeInverterName.includes('Sungrow')) {
+                pitches.push('<strong>Sungrow:</strong> Premium klasė (inverterių Mercedes). Pasižymi aukščiausio lygio patikimumu ir tobulu aušinimu. Pasirinkimas tiems, kas ieško geriausios inžinerijos.');
+            }
+
+            // Modulių argumentai
+            let modName = selectedModule.name;
+            if (modName.includes('AIKO')) {
+                pitches.push('<strong>AIKO (Neostar) moduliai:</strong> Technologijų viršūnė. Priekyje nėra jokių sidabrinių linijų – jie absoliučiai juodi, ypač galingi ir efektyviai veikia net daliniame šešėlyje.');
+            } else if (modName.includes('LONGI') || modName.includes('Jinko')) {
+                pitches.push('<strong>Pasauliniai gigantai (Tier 1):</strong> Tai saugiausias ir patikimiausias pasirinkimas. N-Type celių dėka jie lėčiau sensta per 30 metų ir efektyviau dirba karštomis dienomis.');
+            } else if (modName.includes('Jolywood')) {
+                pitches.push('<strong>Jolywood moduliai:</strong> Dvipusiai (Bifacial) lyderiai. Gamina elektrą ne tik iš priekio, bet ir sugeria atspindžius iš nugarėlės. Idealu plokštiems stogams.');
+            }
+
+            // EV stotelės argumentai
+            if (hasEv && !hasStation && DATA.evStations[evIndex]) {
+                let evName = DATA.evStations[evIndex].name;
+                if (evName.includes('Teltonika')) {
+                    pitches.push('<strong>Teltonika stotelė:</strong> Išmanus lietuviškas Premium produktas. Gražus dizainas, dinaminis galios valdymas (neleis išmušti saugiklių) ir puikus garantinis aptarnavimas vietoje.');
+                } else if (evName.includes('Amina')) {
+                    pitches.push('<strong>Amina stotelė:</strong> Skandinaviškas paprastumas. Minimalistinė, nepastebima, sukurta atlaikyti atšiaurias žiemas – tiesiog įkišate laidą ir kraunate.');
+                } else if (evName.includes('FoxESS')) {
+                    pitches.push('<strong>FoxESS stotelė:</strong> Viena ekosistema. Jei turite FoxESS inverterį, visą namo energetiką ir elektromobilio krovimą valdysite per vieną ir tą pačią programėlę.');
+                }
+            }
+
+            // Atvaizduojame argumentus
+            let pitchContainer = document.getElementById('salesPitchesBox');
+            if (pitches.length > 0) {
+                pitchContainer.classList.remove('hidden');
+                let html = '<h3 class="text-sm font-bold text-blue-900 mb-3 flex items-center"><svg class="w-5 h-5 mr-2 text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707.707a1 1 0 101.414 1.414l.707-.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z"></path></svg> Pasirinktos įrangos privalumai (Argumentai klientui)</h3><div class="space-y-2">';
+                pitches.forEach(p => {
+                    html += `<p class="text-xs text-slate-700 flex items-start"><svg class="w-4 h-4 mr-2 text-green-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> <span>${p}</span></p>`;
+                });
+                html += '</div>';
+                pitchContainer.innerHTML = html;
+            } else {
+                pitchContainer.classList.add('hidden');
+            }
+
+            // Fiksuojame duomenis išsaugojimo funkcijai
             window.currentProposalData = {
                 power: totalKw.toFixed(2),
                 roofType: roofTypeDisplay,
@@ -1057,7 +1112,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                 modules: `${manualModuleCount} vnt. ${selectedModule.name}`,
                 inverter: hasBattery && batteryMode === 'kit' ? selHybrid.name : (selInverter ? selInverter.name : ''),
                 battery: hasBattery && batteryMode === 'custom' ? selBattery.name : (hasBattery && batteryMode === 'kit' ? "Integruota hibrido komplekte" : "Nėra"),
-                evStation: evStationPrice > 0 ? DATA.evStations[evIndex].name : "Nėra",
+                evStation: evStationPrice > 0 && DATA.evStations[evIndex] ? DATA.evStations[evIndex].name : "Nėra",
                 priceNoApva: totalNoApva.toFixed(2),
                 apva: apvaDiscount.toFixed(2),
                 finalPrice: finalPrice.toFixed(2),
