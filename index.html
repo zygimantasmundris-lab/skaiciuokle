@@ -362,7 +362,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                             <svg class="w-6 h-6 mr-2 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                             Efektyvumo analizė
                         </h3>
-                        <button onclick="openLogicModal()" class="text-blue-500 hover:text-blue-700 transition-colors p-1" title="Kaip tai skaičiuojama?">
+                        <button onclick="openLogicModal()" class="text-blue-500 hover:text-blue-700 transition-colors p-1" title="Bendra skaičiavimo logika">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         </button>
                     </div>
@@ -374,8 +374,13 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                             <p id="evConsumptionNote" class="text-[10px] text-green-600 font-semibold mt-1 hidden">+ EV krovimas</p>
                         </div>
                         
-                        <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
-                            <p class="text-[10px] uppercase font-bold text-blue-600 mb-1">Sistemos galia</p>
+                        <div class="bg-blue-50 p-4 rounded-xl border border-blue-100 relative">
+                            <div class="flex justify-between items-start mb-1">
+                                <p class="text-[10px] uppercase font-bold text-blue-600">Sistemos galia</p>
+                                <button onclick="openMathModal()" class="text-blue-400 hover:text-blue-600 p-0.5" title="Kaip apskaičiuota generacija?">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </button>
+                            </div>
                             <p class="text-2xl font-black text-blue-900"><span id="resKw">0</span><span class="text-sm text-blue-600 font-normal ml-1">kWp</span></p>
                             <p class="text-[10px] text-blue-600 mt-1 flex flex-col">
                                 <span>Generuos: <span id="resGenerated" class="font-bold">0</span> kWh/m.</span>
@@ -458,44 +463,69 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             <div class="p-6 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-white/95 backdrop-blur z-10">
                 <h3 class="text-xl font-bold text-blue-900 flex items-center">
                     <svg class="w-6 h-6 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    Kaip mes tai skaičiuojame?
+                    Bendra skaičiavimo logika
                 </h3>
                 <button onclick="closeLogicModal()" class="text-slate-400 hover:text-slate-600 transition-colors p-2 bg-slate-100 rounded-full">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
             <div class="p-6 space-y-6 text-sm text-slate-700">
-                
+                <p>Mūsų skaičiuoklė sukurta siekiant pateikti ne reklaminius, o <strong>realistiškus ir techniškai pagrįstus skaičius</strong>. Štai keletas principų, kuriais vadovaujamės:</p>
                 <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
-                    <h4 class="font-bold text-blue-900 mb-2 flex items-center">
-                        <svg class="w-5 h-5 mr-2 text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path></svg>
-                        Sistemos generacija ir PVGIS
-                    </h4>
-                    <p>Mūsų skaičiuoklė nenaudoja tuščių pažadų. Mes remiamės oficialia Europos Sąjungos <strong>PVGIS duomenų baze</strong>. Sugeneruotas energijos kiekis automatiškai keičiasi priklausomai nuo Jūsų pasirinktos stogo krypties (pietūs generuoja daugiau, šiaurė – mažiau) bei šešėlių įtakos. Jei pasirenkate optimizatorius – šešėlio praradimai yra anuliuojami.</p>
+                    <h4 class="font-bold text-blue-900 mb-2">1. PVGIS ir Stogo kryptis</h4>
+                    <p>Sugeneruotas energijos kiekis skaičiuojamas naudojant oficialią Europos Sąjungos <strong>PVGIS duomenų bazę</strong>. Generacija pritaikoma atsižvelgiant į jūsų nurodytą stogo kryptį.</p>
                 </div>
-
                 <div class="bg-purple-50 p-4 rounded-xl border border-purple-100">
-                    <h4 class="font-bold text-purple-900 mb-2 flex items-center">
-                        <svg class="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                        Baterijos įkrovimas ir „Miegojimas“
-                    </h4>
-                    <p>Jei pasirenkate sistemą su baterija, mes skaičiuojame krovimo laiką įvertindami realistišką saulės intensyvumą skirtingais metų laikais. Dienos metu baterija susiurbia perteklinę energiją, o naktį atiduoda ją namui. Tai reiškia, kad jūs beveik nenaudojate elektros iš tinklo ir išvengiate ESO pasaugojimo mokesčių.</p>
+                    <h4 class="font-bold text-purple-900 mb-2">2. Baterijos įkrovimas</h4>
+                    <p>Baterijos krovimo laikas skaičiuojamas įvertinant skirtingą saulės intensyvumą metų laikais (vasarą sistema naudoja 80% savo galios krovimui, žiemą – vos 10%). Tai leidžia realistiškai įvertinti, per kiek laiko kaupiklis bus pilnas.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="mathModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-white/95 backdrop-blur z-10">
+                <h3 class="text-xl font-bold text-blue-900 flex items-center">
+                    <svg class="w-6 h-6 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                    Kaip skaičiuojama generacija ir atsiperkamumas?
+                </h3>
+                <button onclick="closeMathModal()" class="text-slate-400 hover:text-slate-600 transition-colors p-2 bg-slate-100 rounded-full">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="p-6 space-y-6 text-sm text-slate-700">
+                
+                <div class="space-y-3">
+                    <h4 class="font-bold text-lg text-slate-800 border-b pb-1">1. Sistemos generacija (kWh/metus)</h4>
+                    <p>Galutinis sugeneruotas kiekis nustatomas per 4 žingsnių filtrą:</p>
+                    <ul class="list-disc pl-5 space-y-2 text-slate-600">
+                        <li><strong>Bazinė galia:</strong> Modulių skaičius padauginamas iš vieno modulio galios (pvz. 12 x 460W = 5.52 kWp).</li>
+                        <li><strong>PVGIS koeficientas:</strong> Ši galia dauginama iš saulėtumo rodiklio pagal stogo kryptį (pvz., Pietūs = 1000, Rytai = 850).</li>
+                        <li><strong>Šešėlis ir Optimizatoriai:</strong> Jei nurodėte šešėlį, generacija mažinama. <em>Tačiau, pasirinkus optimizatorius, šis praradimas yra anuliuojamas</em>, nes optimizatoriai neutralizuoja šešėlio poveikį.</li>
+                        <li><strong>ESO ribojimai:</strong> Jei tinklas leidžia atiduoti gerokai mažiau galios nei sugeneruoja elektrinė (pvz., atidavimas tik 1 kW), vasaros vidurdienį sistema nespės atiduoti pertekliaus. Skaičiuoklė tai mato ir automatiškai minusuoja „nukirptą“ (prarastą) energiją.</li>
+                    </ul>
                 </div>
 
-                <div class="bg-green-50 p-4 rounded-xl border border-green-100">
-                    <h4 class="font-bold text-green-900 mb-2 flex items-center">
-                        <svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        Realus sutaupymas (be baterijos)
-                    </h4>
-                    <p>Jei neturite baterijos, laikoma (pagal standartinę Lietuvos statistiką), kad <strong>30%</strong> pagamintos energijos suvartosite iškart, o <strong>70%</strong> atiduosite į tinklą. Atiduotai energijai atsiimti mes pritaikome dabartinį ESO pasaugojimo mokestį, todėl Jūsų matomas „Sutaupymas“ ir „Atsiperkamumas“ atspindi visišką realybę, o ne išpūstą reklamą.</p>
-                </div>
-
-                <div class="bg-red-50 p-4 rounded-xl border border-red-100">
-                    <h4 class="font-bold text-red-900 mb-2 flex items-center">
-                        <svg class="w-5 h-5 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                        APVA ir ESO atidavimo ribojimai
-                    </h4>
-                    <p>Jeigu tinklo operatorius (ESO) apriboja Jūsų atidavimą į tinklą (pvz., iki 1 kW ar 0 kW), o Jūsų elektrinė yra gerokai galingesnė, vasaros vidurdienį susidarys energijos perteklius. Inverteris bus priverstas „nukirpti“ (sumažinti) gamybą. Mūsų skaičiuoklė automatiškai įvertina šiuos praradimus ir atitinkamai pamažina metinę generaciją.</p>
+                <div class="space-y-3">
+                    <h4 class="font-bold text-lg text-slate-800 border-b pb-1">2. Atsiperkamumas (Metais)</h4>
+                    <p>Skaičiuojant atsiperkamumą, pirmiausia įvertiname Jūsų metinį elektros <strong>sutaupymą eurais</strong>. Pinigai skaičiuojami skirtingai, priklausomai nuo baterijos:</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                        <div class="bg-slate-50 p-3 rounded border border-slate-200">
+                            <span class="font-bold text-slate-800 block mb-1">BE baterijos:</span>
+                            Lietuvos statistika rodo, kad vidutiniškai <strong>30%</strong> pagamintos energijos suvartojama tiesiogiai, o <strong>70%</strong> atiduodama į ESO tinklą „pasaugojimui“. Už tuos 70% atsiimant mokamas ESO mokestis (~0.054 €/kWh), todėl Jūsų sutaupymas yra šiek tiek mažesnis.
+                        </div>
+                        <div class="bg-purple-50 p-3 rounded border border-purple-200">
+                            <span class="font-bold text-purple-900 block mb-1">SU baterija:</span>
+                            Dieną perteklius kaupiamas baterijoje, o naktį naudojamas namams. Kadangi Jūs nebeatiduodate šios energijos į tinklą, <strong>ESO pasaugojimo mokestis Jums nebetaikomas</strong>. Vadinasi, kiekviena Jūsų sugeneruota kWh sutaupo Jums pilną tarifo kainą (pvz., 0.24 €).
+                        </div>
+                    </div>
+                    
+                    <p class="mt-4 bg-blue-50 p-3 rounded font-medium text-blue-900">
+                        <strong>Galutinė formulė:</strong><br>
+                        (Investicija į įrangą ir montavimą - APVA kompensacija) / Metinio sutaupymo Eurais = <strong>Atsiperkamumas Metais</strong>.
+                    </p>
                 </div>
 
             </div>
@@ -523,6 +553,17 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
         document.getElementById('apvaModal').addEventListener('click', function(e) {
             if (e.target === this) closeApvaModal();
         });
+
+        function openMathModal() {
+            document.getElementById('mathModal').classList.remove('hidden');
+        }
+        function closeMathModal() {
+            document.getElementById('mathModal').classList.add('hidden');
+        }
+        document.getElementById('mathModal').addEventListener('click', function(e) {
+            if (e.target === this) closeMathModal();
+        });
+
 
         function updateMap() {
             const address = document.getElementById('addressInput').value;
