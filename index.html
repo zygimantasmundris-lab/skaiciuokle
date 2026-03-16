@@ -68,8 +68,8 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                     <div>
                         <label class="block text-sm font-semibold mb-1">Įvado tipas (Fazės)</label>
                         <div class="flex space-x-4 mt-2 bg-slate-50 p-2 rounded border border-slate-200">
-                            <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="phase" value="1" checked class="text-blue-600 focus:ring-blue-500"> <span>Vienfazis</span></label>
-                            <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="phase" value="3" class="text-blue-600 focus:ring-blue-500"> <span>Trifazis</span></label>
+                            <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="phase" value="1" onchange="updateEquipmentByPhase()" class="text-blue-600 focus:ring-blue-500"> <span>Vienfazis</span></label>
+                            <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="phase" value="3" onchange="updateEquipmentByPhase()" checked class="text-blue-600 focus:ring-blue-500"> <span>Trifazis</span></label>
                         </div>
                     </div>
 
@@ -247,8 +247,8 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                     </div>
                     
                     <div id="inverterStandardBox" class="bg-slate-50 p-4 rounded border border-slate-200">
-                        <label class="block text-sm font-bold mb-2 text-slate-800 uppercase tracking-wide">
-                            Inverteris <span id="customInverterHint" class="hidden text-[10px] text-purple-600 font-normal ml-2">(Pasirinkite hibridinį)</span>
+                        <label class="block text-sm font-bold mb-2 text-slate-800 uppercase tracking-wide flex justify-between">
+                            <span>Inverteris <span id="customInverterHint" class="hidden text-[10px] text-purple-600 font-normal ml-2">(Pasirinkite hibridinį)</span></span>
                         </label>
                         <select id="inverterSelect" class="w-full border border-slate-300 p-2 rounded bg-white shadow-sm mb-2"></select>
                         <p id="inverterDesc" class="text-xs text-slate-500 font-medium"></p>
@@ -627,35 +627,37 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
 
         const DATA = {
             inverters: [
-                { name: "Solis S5-GR3P5K 5kW (Trifazis)", price: 529.98, desc: "Patikimas trifazis inverteris su dviem MPPT išėjimais. Pasižymi itin aukštu efektyvumu ir tinka standartinėms namų saulės elektrinėms." },
-                { name: "FoxESS T5-G3 (GD470) 5kW (Trifazis)", price: 545.33, desc: "Kompaktiškas ir našus trifazis inverteris. Žema pradinė įtampa užtikrina, kad elektrinė pradės gaminti energiją anksčiau ryte ir baigs vėliau vakare." },
-                { name: "Solis S5-GR3P6K 6kW (Trifazis)", price: 551.76, desc: "Patikimas trifazis inverteris su dviem MPPT išėjimais. Pasižymi itin aukštu efektyvumu ir tinka standartinėms namų saulės elektrinėms." },
-                { name: "FoxESS T6-G3 (GD470) 6kW (Trifazis)", price: 559.61, desc: "Kompaktiškas ir našus trifazis inverteris. Žema pradinė įtampa užtikrina ilgesnį generacijos laiką." },
-                { name: "Solis S5-GR3P8K 8kW (Trifazis)", price: 602.58, desc: "Patikimas trifazis inverteris su dviem MPPT išėjimais ir itin aukštu efektyvumu." },
-                { name: "Solis S5-GR3P10K 10kW (Trifazis)", price: 666.47, desc: "Patikimas trifazis inverteris su dviem MPPT išėjimais. Tinka standartinėms namų saulės elektrinėms." },
-                { name: "Solis S5-GR3P12K 12kW (Trifazis)", price: 724.55, desc: "Galingas ir patikimas trifazis inverteris didesnėms sistemoms." },
-                { name: "Solis S5-GR3P15K 15kW (Trifazis)", price: 768.11, desc: "Galingas ir patikimas trifazis inverteris didesnėms sistemoms." },
-                { name: "Sungrow SH6.0RS 6kW (Vienfazis hibridinis)", price: 726.00, desc: "Premium klasės vienfazis hibridinis inverteris su integruota greito atsarginio maitinimo (back-up) funkcija dingus elektrai." },
-                { name: "Solis S6-EH1P5K-L-PLUS 5kW (Vienfazis hibridinis)", price: 1033.34, desc: "Išmanus S6 kartos vienfazis hibridas. Užtikrina namų energetinį saugumą." },
-                { name: "FoxESS P3-5.0-SH 5kW (Hibridinis)", price: 1544.79, desc: "Pažangus trifazis hibridinis inverteris. Palaiko asimetrinį apkrovimą (energija atiduodama į tą fazę, kuriai jos labiausiai reikia)." },
-                { name: "FoxESS P3-6.0-SH 6kW (Hibridinis)", price: 1853.72, desc: "Pažangus trifazis hibridinis inverteris. Palaiko asimetrinį apkrovimą." },
-                { name: "FoxESS P3-8.0-SH 8kW (Hibridinis)", price: 1633.32, desc: "Pažangus trifazis hibridinis inverteris. Palaiko asimetrinį apkrovimą." },
-                { name: "FoxESS P3-10.0-SH 10kW (Hibridinis)", price: 1594.77, desc: "Pažangus trifazis hibridinis inverteris didesnėms sistemoms. Palaiko asimetrinį apkrovimą." },
-                { name: "Solis S6-EH1P8K-L-PLUS 8kW (Vienfazis hibridinis)", price: 1447.16, desc: "Išmanus S6 kartos vienfazis hibridas. Puikiai suderinamas su įvairiomis baterijomis." },
-                { name: "Solis S6-EH3P8K-H-EU 8kW (Trifazis hibridinis)", price: 1292.28, desc: "Ypač galingas trifazis hibridas. Palaiko asimetrinį atidavimą į tinklą, veikia su aukštos įtampos baterijomis ir užtikrina nepertraukiamą maitinimą (UPS)." },
-                { name: "Solis S6-EH3P10K-H-EU 10kW (Trifazis hibridinis)", price: 1301.96, desc: "Ypač galingas trifazis hibridas. Palaiko asimetrinį atidavimą į tinklą ir UPS funkciją." },
-                { name: "Solis S6-EH3P20K-H 20kW (Trifazis hibridinis)", price: 2129.60, desc: "Ypač galingas trifazis hibridas labai dideliems poreikiams. Palaiko asimetrinį apkrovimą ir UPS funkciją." }
+                { name: "Solis S5-GR3P5K 5kW (Trifazis)", price: 529.98, desc: "Patikimas trifazis inverteris su dviem MPPT išėjimais. Pasižymi itin aukštu efektyvumu ir tinka standartinėms namų saulės elektrinėms.", phase: 3 },
+                { name: "FoxESS T5-G3 (GD470) 5kW (Trifazis)", price: 545.33, desc: "Kompaktiškas ir našus trifazis inverteris. Žema pradinė įtampa užtikrina ilgesnį generacijos laiką.", phase: 3 },
+                { name: "Solis S5-GR3P6K 6kW (Trifazis)", price: 551.76, desc: "Patikimas trifazis inverteris su dviem MPPT išėjimais.", phase: 3 },
+                { name: "FoxESS T6-G3 (GD470) 6kW (Trifazis)", price: 559.61, desc: "Kompaktiškas ir našus trifazis inverteris.", phase: 3 },
+                { name: "Solis S5-GR3P8K 8kW (Trifazis)", price: 602.58, desc: "Patikimas trifazis inverteris su dviem MPPT išėjimais.", phase: 3 },
+                { name: "Solis S5-GR3P10K 10kW (Trifazis)", price: 666.47, desc: "Patikimas trifazis inverteris standartinėms sistemoms.", phase: 3 },
+                { name: "Solis S5-GR3P12K 12kW (Trifazis)", price: 724.55, desc: "Galingas ir patikimas trifazis inverteris didesnėms sistemoms.", phase: 3 },
+                { name: "Solis S5-GR3P15K 15kW (Trifazis)", price: 768.11, desc: "Galingas ir patikimas trifazis inverteris didesnėms sistemoms.", phase: 3 },
+                { name: "Sungrow SH6.0RS 6kW (Vienfazis hibridinis)", price: 726.00, desc: "Premium klasės vienfazis hibridinis inverteris su integruota greito atsarginio maitinimo (back-up) funkcija dingus elektrai.", phase: 1 },
+                { name: "Solis S6-EH1P5K-L-PLUS 5kW (Vienfazis hibridinis)", price: 1033.34, desc: "Išmanus S6 kartos vienfazis hibridas. Užtikrina namų energetinį saugumą.", phase: 1 },
+                { name: "Solis S6-EH1P8K-L-PLUS 8kW (Vienfazis hibridinis)", price: 1447.16, desc: "Išmanus S6 kartos vienfazis hibridas. Puikiai suderinamas su įvairiomis baterijomis.", phase: 1 },
+                { name: "FoxESS P3-5.0-SH 5kW (Hibridinis)", price: 1544.79, desc: "Pažangus trifazis hibridinis inverteris. Palaiko asimetrinį apkrovimą.", phase: 3 },
+                { name: "FoxESS P3-6.0-SH 6kW (Hibridinis)", price: 1853.72, desc: "Pažangus trifazis hibridinis inverteris. Palaiko asimetrinį apkrovimą.", phase: 3 },
+                { name: "FoxESS P3-8.0-SH 8kW (Hibridinis)", price: 1633.32, desc: "Pažangus trifazis hibridinis inverteris. Palaiko asimetrinį apkrovimą.", phase: 3 },
+                { name: "FoxESS P3-10.0-SH 10kW (Hibridinis)", price: 1594.77, desc: "Pažangus trifazis hibridinis inverteris didesnėms sistemoms. Palaiko asimetrinį apkrovimą.", phase: 3 },
+                { name: "Solis S6-EH3P8K-H-EU 8kW (Trifazis hibridinis)", price: 1292.28, desc: "Ypač galingas trifazis hibridas. Palaiko asimetrinį atidavimą į tinklą, veikia su aukštos įtampos baterijomis ir užtikrina nepertraukiamą maitinimą (UPS).", phase: 3 },
+                { name: "Solis S6-EH3P10K-H-EU 10kW (Trifazis hibridinis)", price: 1301.96, desc: "Ypač galingas trifazis hibridas. Palaiko asimetrinį atidavimą į tinklą ir UPS funkciją.", phase: 3 },
+                { name: "Solis S6-EH3P20K-H 20kW (Trifazis hibridinis)", price: 2129.60, desc: "Ypač galingas trifazis hibridas labai dideliems poreikiams. Palaiko asimetrinį apkrovimą ir UPS funkciją.", phase: 3 }
             ],
             
             hybrids: [
-                { name: "FoxESS 10kW + FoxESS EP12 11.52kWh", price: 3705.13, capacity: 11.52, desc: "Aukščiausios klasės FoxESS hibridinė sistema su aukštos įtampos (LiFePO4) baterija. Modulinis dizainas užtikrina ilgaamžiškumą." },
-                { name: "FoxESS 15kW + FoxESS EP12", price: 3969.27, capacity: 11.52, desc: "Galingas sprendimas: 15kW hibridinė sistema su aukštos įtampos (LiFePO4) baterija. Modulinis dizainas užtikrina ilgaamžiškumą." },
-                { name: "SAJ 8kW + HS2 10kWh", price: 3320.72, capacity: 10, desc: "Estetiškas „Viskas viename“ (All-in-one) sprendimas, kur inverteris ir baterija yra viename elegantiškame korpuse. Turi UPS funkciją." },
-                { name: "SAJ 8kW + HS2 15kWh", price: 4353.10, capacity: 15, desc: "Estetiškas „Viskas viename“ sprendimas. Didesnė baterijos talpa ir integruota UPS funkcija (apsauga nuo elektros dingimo)." },
-                { name: "SAJ 8kW + HS2 20kWh", price: 5385.47, capacity: 20, desc: "Maksimalus „Viskas viename“ sprendimas. Milžiniškas 20kWh energijos rezervas ir asimetrinis apkrovimo palaikymas." },
-                { name: "SAJ 10kW + HS2 10kWh", price: 3375.90, capacity: 10, desc: "Galingas „Viskas viename“ sprendimas su UPS funkcija ir asimetriniu apkrovimu." },
-                { name: "SAJ 10kW + HS2 15kWh", price: 4408.27, capacity: 15, desc: "10kW hibridinis inverteris ir 15kWh baterija viename elegantiškame korpuse. Turi UPS funkciją." },
-                { name: "SAJ 10kW + HS2 20kWh", price: 5440.64, capacity: 20, desc: "Galingiausias SAJ sprendimas su maksimalia 20kWh baterija viename korpuse. Turi UPS funkciją ir asimetrinį apkrovimą." }
+                { name: "FoxESS 10kW + FoxESS EP12 11.52kWh", price: 3705.13, capacity: 11.52, desc: "Aukščiausios klasės FoxESS hibridinė sistema su aukštos įtampos (LiFePO4) baterija. Modulinis dizainas užtikrina ilgaamžiškumą.", phase: 3 },
+                { name: "FoxESS 15kW + FoxESS EP12", price: 3969.27, capacity: 11.52, desc: "Galingas sprendimas: 15kW hibridinė sistema su aukštos įtampos (LiFePO4) baterija. Modulinis dizainas užtikrina ilgaamžiškumą.", phase: 3 },
+                { name: "SAJ 8kW + HS2 10kWh", price: 3320.72, capacity: 10, desc: "Estetiškas „Viskas viename“ (All-in-one) sprendimas, kur inverteris ir baterija yra viename elegantiškame korpuse. Turi UPS funkciją.", phase: 3 },
+                { name: "SAJ 8kW + HS2 15kWh", price: 4353.10, capacity: 15, desc: "Estetiškas „Viskas viename“ sprendimas. Didesnė baterijos talpa ir integruota UPS funkcija (apsauga nuo elektros dingimo).", phase: 3 },
+                { name: "SAJ 8kW + HS2 20kWh", price: 5385.47, capacity: 20, desc: "Maksimalus „Viskas viename“ sprendimas. Milžiniškas 20kWh energijos rezervas ir asimetrinis apkrovimo palaikymas.", phase: 3 },
+                { name: "SAJ 10kW + HS2 10kWh", price: 3375.90, capacity: 10, desc: "Galingas „Viskas viename“ sprendimas su UPS funkcija ir asimetriniu apkrovimu.", phase: 3 },
+                { name: "SAJ 10kW + HS2 15kWh", price: 4408.27, capacity: 15, desc: "10kW hibridinis inverteris ir 15kWh baterija viename elegantiškame korpuse. Turi UPS funkciją.", phase: 3 },
+                { name: "SAJ 10kW + HS2 20kWh", price: 5440.64, capacity: 20, desc: "Galingiausias SAJ sprendimas su maksimalia 20kWh baterija viename korpuse. Turi UPS funkciją ir asimetrinį apkrovimą.", phase: 3 },
+                { name: "Solis 5kW (Vienfazis) + FoxESS EP6 6.4kWh", price: 2626.68, capacity: 6.4, desc: "Kompaktiškas vienfazis hibridinis sprendimas, tobulai tinkantis mažesniems namams.", phase: 1 },
+                { name: "Sungrow 6kW (Vienfazis) + FoxESS EP12 12.8kWh", price: 3267.40, capacity: 12.8, desc: "Galingas vienfazis hibridinis sprendimas su dideliu baterijos rezervu.", phase: 1 }
             ],
 
             batteries: [
@@ -673,11 +675,12 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             ],
 
             evStations: [
-                { name: "Amina S32A 22kW EV", price: 561.92 },
-                { name: "Amina S20A 22kW EV", price: 640.33 },
-                { name: "FoxESS L11P EV 11kW", price: 457.38 },
-                { name: "Teltonika TeltoCharge 11kW (Type 2, 5m kabelis)", price: 870.27 },
-                { name: "Teltonika TeltoCharge 22kW (Type 2, 5m kabelis)", price: 904.02 }
+                { name: "Teltonika TeltoCharge 7.4kW (Vienfazė, 5m kabelis)", price: 820.00, phase: 1 },
+                { name: "Amina S32A 22kW EV", price: 561.92, phase: 3 },
+                { name: "Amina S20A 22kW EV", price: 640.33, phase: 3 },
+                { name: "FoxESS L11P EV 11kW", price: 457.38, phase: 3 },
+                { name: "Teltonika TeltoCharge 11kW (Type 2, 5m kabelis)", price: 870.27, phase: 3 },
+                { name: "Teltonika TeltoCharge 22kW (Type 2, 5m kabelis)", price: 904.02, phase: 3 }
             ],
             
             optimizerPrice: 52.27, 
@@ -699,13 +702,41 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             document.getElementById('optimizerSelect').innerHTML = optOptions;
         }
 
-        function populateProducts() {
-            const createOptions = (arr) => arr.map((item, index) => `<option value="${index}">${item.name}</option>`).join('');
-            document.getElementById('inverterSelect').innerHTML = createOptions(DATA.inverters);
-            document.getElementById('hybridSelect').innerHTML = createOptions(DATA.hybrids);
-            document.getElementById('batterySelect').innerHTML = createOptions(DATA.batteries);
-            document.getElementById('moduleSelect').innerHTML = createOptions(DATA.modules);
-            document.getElementById('evStationSelect').innerHTML = createOptions(DATA.evStations);
+        // NAUJA: Dinaminis įrangos filtravimas pagal Fazę
+        function updateEquipmentByPhase() {
+            const phase = parseInt(document.querySelector('input[name="phase"]:checked').value);
+            
+            let invOptions = '';
+            DATA.inverters.forEach((item, index) => {
+                if (item.phase === phase) {
+                    invOptions += `<option value="${index}">${item.name}</option>`;
+                }
+            });
+            document.getElementById('inverterSelect').innerHTML = invOptions;
+
+            let hybOptions = '';
+            DATA.hybrids.forEach((item, index) => {
+                if (item.phase === phase) {
+                    hybOptions += `<option value="${index}">${item.name}</option>`;
+                }
+            });
+            document.getElementById('hybridSelect').innerHTML = hybOptions;
+
+            let evOptions = '';
+            DATA.evStations.forEach((item, index) => {
+                if (item.phase === phase) {
+                    evOptions += `<option value="${index}">${item.name}</option>`;
+                }
+            });
+            document.getElementById('evStationSelect').innerHTML = evOptions;
+
+            // Baterijos ir moduliai nepriklauso nuo fazės
+            if (document.getElementById('batterySelect').innerHTML === '') {
+                document.getElementById('batterySelect').innerHTML = DATA.batteries.map((item, index) => `<option value="${index}">${item.name}</option>`).join('');
+                document.getElementById('moduleSelect').innerHTML = DATA.modules.map((item, index) => `<option value="${index}">${item.name}</option>`).join('');
+            }
+            
+            calculate(); // Perskaičiuoti po atnaujinimo
         }
 
         function updateInputListeners() {
@@ -713,7 +744,6 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             inputs.forEach(input => {
                 input.removeEventListener('input', calculate); 
                 input.removeEventListener('change', calculate);
-                
                 input.addEventListener('input', calculate);
                 input.addEventListener('change', calculate);
             });
@@ -752,15 +782,20 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             const optimizersCount = parseInt(document.getElementById('optimizerSelect').value);
             const selectedModule = DATA.modules[document.getElementById('moduleSelect').value];
             
-            const selInverter = DATA.inverters[document.getElementById('inverterSelect').value];
-            const selHybrid = DATA.hybrids[document.getElementById('hybridSelect').value];
+            // Saugikliai, jei po fazės pakeitimo meniu būtų tuščias
+            const invIndex = document.getElementById('inverterSelect').value || 0;
+            const hybIndex = document.getElementById('hybridSelect').value || 0;
+            const evIndex = document.getElementById('evStationSelect').value || 0;
+
+            const selInverter = DATA.inverters[invIndex];
+            const selHybrid = DATA.hybrids[hybIndex];
             const selBattery = DATA.batteries[document.getElementById('batterySelect').value];
             
             let materialsRate = parseFloat(document.getElementById('roofCover').value) || 70;
 
-            document.getElementById('inverterDesc').innerText = selInverter.desc || "";
-            document.getElementById('hybridDesc').innerText = selHybrid.desc || "";
-            document.getElementById('batteryDesc').innerText = selBattery.desc || "";
+            if(selInverter) document.getElementById('inverterDesc').innerText = selInverter.desc || "";
+            if(selHybrid) document.getElementById('hybridDesc').innerText = selHybrid.desc || "";
+            if(selBattery) document.getElementById('batteryDesc').innerText = selBattery.desc || "";
 
             if(optimizersCount > 0) {
                 document.getElementById('optimizerDesc').classList.remove('hidden');
@@ -821,7 +856,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             let generatedKwh = totalKw * pvgis * (1 - (actualShadowPercent / 100));
 
             let actualBatteryCapacity = 0;
-            if(hasBattery && totalKw > 0) {
+            if(hasBattery && totalKw > 0 && selHybrid && selBattery) {
                 actualBatteryCapacity = (batteryMode === 'kit') ? selHybrid.capacity : selBattery.capacity;
                 let summerTime = actualBatteryCapacity / (totalKw * 0.8);
                 let springTime = actualBatteryCapacity / (totalKw * 0.6);
@@ -869,19 +904,19 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
 
             let modulesPrice = manualModuleCount * selectedModule.price;
             let optimizersPrice = optimizersCount > 0 ? (optimizersCount * DATA.optimizerPrice) + DATA.optimizerHubPrice : 0;
-            let evStationPrice = (hasEv && !hasStation) ? DATA.evStations[document.getElementById('evStationSelect').value].price : 0;
+            let evStationPrice = (hasEv && !hasStation && DATA.evStations[evIndex]) ? DATA.evStations[evIndex].price : 0;
 
             let inverterPrice = 0;
             let standaloneBatteryPrice = 0;
 
             if (hasBattery) {
-                if (batteryMode === 'kit') {
+                if (batteryMode === 'kit' && selHybrid) {
                     inverterPrice = selHybrid.price;
-                } else {
+                } else if (selInverter && selBattery) {
                     inverterPrice = selInverter.price;
                     standaloneBatteryPrice = selBattery.price;
                 }
-            } else {
+            } else if (selInverter) {
                 inverterPrice = selInverter.price;
             }
 
@@ -919,7 +954,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                     apvaWarning.innerText = "Parama skiriama tik nuo 5 kW galios elektrinėms.";
                     apvaWarning.classList.remove('hidden');
                     apvaDiscount = 0;
-                } else if (hasEso && esoAllowedPower > 1) { // <-- ČIA YRA NAUJAS SAUGIKLIS
+                } else if (hasEso && esoAllowedPower > 1) { 
                     apvaWarning.innerText = "Pagal APVA sąlygas, atidavimas į tinklą negali viršyti 1 kW.";
                     apvaWarning.classList.remove('hidden');
                     apvaDiscount = 0;
@@ -993,10 +1028,10 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
 
         document.addEventListener('DOMContentLoaded', () => {
             populateKwSelects();
-            populateProducts();
+            updateEquipmentByPhase(); // Užpildo įrangą pagal numatytąją fazę (Trifazis)
             updateInputListeners();
             toggleDeleteButtons();
-            calculate();
+            // calculate() is called inside updateEquipmentByPhase
         });
     </script>
 </body>
