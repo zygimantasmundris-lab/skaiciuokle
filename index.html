@@ -693,7 +693,12 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                 { name: "FoxESS L11P EV 11kW", price: 457.38, phase: 3 },
                 { name: "Teltonika TeltoCharge 11kW (Type 2, 5m kabelis)", price: 870.27, phase: 3 },
                 { name: "Teltonika TeltoCharge 22kW (Type 2, 5m kabelis)", price: 904.02, phase: 3 }
-            ]
+            ],
+            
+            optimizerPrice: 52.27, 
+            optimizerHubPrice: 278.30, 
+            apvaFixedDiscount: 5012.19,
+            esoStorageFee: 0.054 
         };
 
         function populateKwSelects() {
@@ -1044,7 +1049,6 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             document.getElementById('resSavings').innerText = yearlySavings.toFixed(0);
             document.getElementById('resPayback').innerText = paybackYears;
 
-            // PAPILDYTA INFORMACIJA IŠSAUGOJIMUI
             window.currentProposalData = {
                 power: totalKw.toFixed(2),
                 roofType: roofTypeDisplay,
