@@ -218,7 +218,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                     </button>
                                 </div>
-                                <p id="apvaWarningMsg" class="text-xs text-red-500 font-bold mt-2 hidden"></p>
+                                <p id="apvaWarningMsg" class="text-xs font-bold mt-2 hidden"></p>
                             </div>
 
                             <label class="flex items-center space-x-3 font-bold text-slate-700 cursor-pointer bg-slate-100 p-3 rounded border border-slate-200 flex-1 hover:bg-slate-200 transition-colors">
@@ -477,7 +477,14 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                     <li>Baterijos talpa turi būti ne mažesnė kaip <strong>10 kWh</strong>.</li>
                     <li>Atidavimas į ESO tinklą <strong>negali viršyti 1 kW</strong> (arba turi būti 0 kW).</li>
                 </ul>
-                <p class="text-xs text-slate-500 mt-4 italic">*Skaičiuoklėje paramos suma pritaikoma automatiškai, jei tenkinamos šios sąlygos.</p>
+                <div class="bg-emerald-50 p-3 rounded border border-emerald-100 mt-3">
+                    <p class="font-bold text-emerald-900 mb-1">Skiriamos sumos pagal baterijos tipą:</p>
+                    <ul class="list-none space-y-1">
+                        <li>✅ <strong>LiFePO4 (LFP)</strong> baterijoms: <strong>5012,19 €</strong></li>
+                        <li>ℹ️ Kitos sudėties Ličio jonų baterijoms: 4572,30 €</li>
+                    </ul>
+                    <p class="text-[10px] mt-2 text-emerald-700">*Mūsų siūlomi FoxESS ir SAJ kaupikliai naudoja pažangią ir saugią LiFePO4 chemiją, todėl visada skaičiuojame maksimalią dotaciją.</p>
+                </div>
             </div>
         </div>
     </div>
@@ -653,21 +660,21 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             ],
             
             hybrids: [
-                { name: "FoxESS 10kW + FoxESS EP12 11.52kWh", price: 3705.13, capacity: 11.52, desc: "Aukščiausios klasės FoxESS hibridinė sistema su aukštos įtampos (LiFePO4) baterija. Modulinis dizainas užtikrina ilgaamžiškumą.", phase: 3 },
-                { name: "FoxESS 15kW + FoxESS EP12", price: 3969.27, capacity: 11.52, desc: "Galingas sprendimas: 15kW hibridinė sistema su aukštos įtampos (LiFePO4) baterija. Modulinis dizainas užtikrina ilgaamžiškumą.", phase: 3 },
-                { name: "SAJ 8kW + HS2 10kWh", price: 3320.72, capacity: 10, desc: "Estetiškas „Viskas viename“ (All-in-one) sprendimas, kur inverteris ir baterija yra viename elegantiškame korpuse. Turi UPS funkciją.", phase: 3 },
-                { name: "SAJ 8kW + HS2 15kWh", price: 4353.10, capacity: 15, desc: "Estetiškas „Viskas viename“ sprendimas. Didesnė baterijos talpa ir integruota UPS funkcija (apsauga nuo elektros dingimo).", phase: 3 },
-                { name: "SAJ 8kW + HS2 20kWh", price: 5385.47, capacity: 20, desc: "Maksimalus „Viskas viename“ sprendimas. Milžiniškas 20kWh energijos rezervas ir asimetrinis apkrovimo palaikymas.", phase: 3 },
-                { name: "SAJ 10kW + HS2 10kWh", price: 3375.90, capacity: 10, desc: "Galingas „Viskas viename“ sprendimas su UPS funkcija ir asimetriniu apkrovimu.", phase: 3 },
-                { name: "SAJ 10kW + HS2 15kWh", price: 4408.27, capacity: 15, desc: "10kW hibridinis inverteris ir 15kWh baterija viename elegantiškame korpuse. Turi UPS funkciją.", phase: 3 },
-                { name: "SAJ 10kW + HS2 20kWh", price: 5440.64, capacity: 20, desc: "Galingiausias SAJ sprendimas su maksimalia 20kWh baterija viename korpuse. Turi UPS funkciją ir asimetrinį apkrovimą.", phase: 3 },
-                { name: "Solis 5kW (Vienfazis) + FoxESS EP6 6.4kWh", price: 2626.68, capacity: 6.4, desc: "Kompaktiškas vienfazis hibridinis sprendimas, tobulai tinkantis mažesniems namams.", phase: 1 },
-                { name: "Sungrow 6kW (Vienfazis) + FoxESS EP12 12.8kWh", price: 3267.40, capacity: 12.8, desc: "Galingas vienfazis hibridinis sprendimas su dideliu baterijos rezervu.", phase: 1 }
+                { name: "FoxESS 10kW + FoxESS EP12 11.52kWh", price: 3705.13, capacity: 11.52, desc: "Aukščiausios klasės FoxESS hibridinė sistema. LiFePO4 baterija.", phase: 3, chem: 'LFP' },
+                { name: "FoxESS 15kW + FoxESS EP12", price: 3969.27, capacity: 11.52, desc: "Galingas sprendimas: 15kW hibridinė sistema. LiFePO4 baterija.", phase: 3, chem: 'LFP' },
+                { name: "SAJ 8kW + HS2 10kWh", price: 3320.72, capacity: 10, desc: "Estetiškas „Viskas viename“ (All-in-one) LiFePO4 sprendimas. Turi UPS funkciją.", phase: 3, chem: 'LFP' },
+                { name: "SAJ 8kW + HS2 15kWh", price: 4353.10, capacity: 15, desc: "Estetiškas „Viskas viename“ LiFePO4 sprendimas. Integruota UPS funkcija.", phase: 3, chem: 'LFP' },
+                { name: "SAJ 8kW + HS2 20kWh", price: 5385.47, capacity: 20, desc: "Maksimalus „Viskas viename“ LiFePO4 sprendimas. Milžiniškas 20kWh rezervas.", phase: 3, chem: 'LFP' },
+                { name: "SAJ 10kW + HS2 10kWh", price: 3375.90, capacity: 10, desc: "Galingas „Viskas viename“ LiFePO4 sprendimas su UPS funkcija.", phase: 3, chem: 'LFP' },
+                { name: "SAJ 10kW + HS2 15kWh", price: 4408.27, capacity: 15, desc: "10kW hibridinis inverteris ir 15kWh LiFePO4 baterija viename korpuse.", phase: 3, chem: 'LFP' },
+                { name: "SAJ 10kW + HS2 20kWh", price: 5440.64, capacity: 20, desc: "Galingiausias SAJ LiFePO4 sprendimas. Asimetrinis apkrovimas.", phase: 3, chem: 'LFP' },
+                { name: "Solis 5kW (Vienfazis) + FoxESS EP6 6.4kWh", price: 2626.68, capacity: 6.4, desc: "Kompaktiškas vienfazis LiFePO4 hibridinis sprendimas mažesniems namams.", phase: 1, chem: 'LFP' },
+                { name: "Sungrow 6kW (Vienfazis) + FoxESS EP12 12.8kWh", price: 3267.40, capacity: 12.8, desc: "Galingas vienfazis hibridinis sprendimas su didele LiFePO4 baterija.", phase: 1, chem: 'LFP' }
             ],
 
             batteries: [
-                { name: "FoxESS EP12 PLUS 12.8 kWh LFP", price: 2541.40, capacity: 12.8, desc: "Efektyvus ir patikimas energijos kaupimas su 12.8 kWh talpa (LFP)." },
-                { name: "FoxESS EP6 PLUS 6.4 kWh LFP", price: 1593.34, capacity: 6.4, desc: "Kompaktiškas FoxESS energijos kaupiklis su 6.4 kWh talpa." }
+                { name: "FoxESS EP12 PLUS 12.8 kWh LFP", price: 2541.40, capacity: 12.8, desc: "Efektyvus ir patikimas energijos kaupimas su 12.8 kWh LiFePO4 talpa.", chem: 'LFP' },
+                { name: "FoxESS EP6 PLUS 6.4 kWh LFP", price: 1593.34, capacity: 6.4, desc: "Kompaktiškas FoxESS energijos kaupiklis su 6.4 kWh LiFePO4 talpa.", chem: 'LFP' }
             ],
 
             modules: [
@@ -686,12 +693,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                 { name: "FoxESS L11P EV 11kW", price: 457.38, phase: 3 },
                 { name: "Teltonika TeltoCharge 11kW (Type 2, 5m kabelis)", price: 870.27, phase: 3 },
                 { name: "Teltonika TeltoCharge 22kW (Type 2, 5m kabelis)", price: 904.02, phase: 3 }
-            ],
-            
-            optimizerPrice: 52.27, 
-            optimizerHubPrice: 278.30, 
-            apvaFixedDiscount: 5012.19,
-            esoStorageFee: 0.054 
+            ]
         };
 
         function populateKwSelects() {
@@ -858,8 +860,16 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             let generatedKwh = totalKw * pvgis * (1 - (actualShadowPercent / 100));
 
             let actualBatteryCapacity = 0;
-            if(hasBattery && totalKw > 0 && selHybrid && selBattery) {
-                actualBatteryCapacity = (batteryMode === 'kit') ? selHybrid.capacity : selBattery.capacity;
+            let currentChem = 'LFP'; // Fiksuojame chemiją pagal pasirinktą produktą
+            if(hasBattery && totalKw > 0) {
+                if (batteryMode === 'kit' && selHybrid) {
+                    actualBatteryCapacity = selHybrid.capacity;
+                    currentChem = selHybrid.chem || 'LFP';
+                } else if (selBattery) {
+                    actualBatteryCapacity = selBattery.capacity;
+                    currentChem = selBattery.chem || 'LFP';
+                }
+
                 let summerTime = actualBatteryCapacity / (totalKw * 0.8);
                 let springTime = actualBatteryCapacity / (totalKw * 0.6);
                 let autumnTime = actualBatteryCapacity / (totalKw * 0.3);
@@ -941,27 +951,30 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             
             let apvaDiscount = 0;
             let apvaWarning = document.getElementById('apvaWarningMsg');
+            apvaWarning.className = "text-xs font-bold mt-2"; // Nunulinti klases prieš tikrinant
             
+            // ATNAUJINTA GRIEŽTA APVA LOGIKA SU CHEMIJOS TIKRINIMU
             if(hasApva) {
                 if(!hasBattery) {
                     apvaWarning.innerText = "Parama skiriama tik įsirengiant elektrinę KARTU su kaupikliu.";
-                    apvaWarning.classList.remove('hidden');
+                    apvaWarning.classList.add('text-red-500', 'block');
                     apvaDiscount = 0;
-                } else if (hasBattery && batteryMode === 'custom' && selBattery.capacity < 10) {
+                } else if (hasBattery && batteryMode === 'custom' && selBattery && selBattery.capacity < 10) {
                     apvaWarning.innerText = "Parama skiriama tik kaupikliams nuo 10 kWh talpos.";
-                    apvaWarning.classList.remove('hidden');
+                    apvaWarning.classList.add('text-red-500', 'block');
                     apvaDiscount = 0;
                 } else if(totalKw < 5) {
                     apvaWarning.innerText = "Parama skiriama tik nuo 5 kW galios elektrinėms.";
-                    apvaWarning.classList.remove('hidden');
+                    apvaWarning.classList.add('text-red-500', 'block');
                     apvaDiscount = 0;
                 } else if (hasEso && esoAllowedPower > 1) { 
                     apvaWarning.innerText = "Pagal APVA sąlygas, atidavimas į tinklą negali viršyti 1 kW.";
-                    apvaWarning.classList.remove('hidden');
+                    apvaWarning.classList.add('text-red-500', 'block');
                     apvaDiscount = 0;
                 } else {
-                    apvaWarning.classList.add('hidden');
-                    apvaDiscount = DATA.apvaFixedDiscount; 
+                    apvaDiscount = currentChem === 'LFP' ? 5012.19 : 4572.30; 
+                    apvaWarning.innerText = `Pritaikyta ${currentChem === 'LFP' ? 'LiFePO4' : 'Ličio jonų'} kaupiklio kompensacija.`;
+                    apvaWarning.classList.add('text-emerald-600', 'block');
                 }
             } else {
                 apvaWarning.classList.add('hidden');
@@ -1037,14 +1050,12 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                 apva: apvaDiscount.toFixed(2),
                 finalPrice: finalPrice.toFixed(2),
                 payback: paybackYears,
-                // PAPILDYTA INFORMACIJA:
                 gridPower: document.getElementById('gridPower').value + ' kW',
                 esoCondition: hasEso ? document.getElementById('esoPower').value + ' kW' : 'Neatiduodama (0 kW)',
                 savings: yearlySavings.toFixed(0) + ' €'
             };
         }
 
-        // NAUJA FUNKCIJA: PASIŪLYMO IŠSAUGOJIMAS KORTELĖJE
         let proposalCount = 0;
         function saveProposal() {
             proposalCount++;
@@ -1096,7 +1107,6 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             document.getElementById('proposalsContainer').insertAdjacentHTML('beforeend', html);
             document.getElementById('savedProposalsSection').classList.remove('hidden');
             
-            // Lėtas slinkimas žemyn, kad vartotojas pamatytų naują kortelę
             document.getElementById('savedProposalsSection').scrollIntoView({ behavior: 'smooth', block: 'end' });
         }
 
