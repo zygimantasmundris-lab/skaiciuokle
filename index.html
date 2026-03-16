@@ -768,6 +768,9 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                 roofArea += (l * w);
             }
             
+            const roofTypeVal = document.querySelector('input[name="roofType"]:checked').value;
+            const roofTypeDisplay = roofTypeVal === 'slaitinis' ? 'Šlaitinis' : 'Plokščias';
+
             const hasEso = document.getElementById('esoCheck').checked;
             const esoAllowedPower = hasEso ? parseFloat(document.getElementById('esoPower').value) : 0;
             
@@ -849,6 +852,9 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             let totalKw = (manualModuleCount * selectedModule.powerW) / 1000;
             document.getElementById('modulePowerDisplay').innerText = totalKw.toFixed(2);
             
+            let remainingModules = maxModuleCount - manualModuleCount;
+            if (remainingModules < 0) remainingModules = 0;
+
             let actualShadowPercent = shadowPercent;
             if (hasShadow && optimizersCount > 0) {
                 actualShadowPercent = 0; 
@@ -860,7 +866,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             let generatedKwh = totalKw * pvgis * (1 - (actualShadowPercent / 100));
 
             let actualBatteryCapacity = 0;
-            let currentChem = 'LFP'; // Fiksuojame chemiją pagal pasirinktą produktą
+            let currentChem = 'LFP'; 
             if(hasBattery && totalKw > 0) {
                 if (batteryMode === 'kit' && selHybrid) {
                     actualBatteryCapacity = selHybrid.capacity;
@@ -951,9 +957,8 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             
             let apvaDiscount = 0;
             let apvaWarning = document.getElementById('apvaWarningMsg');
-            apvaWarning.className = "text-xs font-bold mt-2"; // Nunulinti klases prieš tikrinant
+            apvaWarning.className = "text-xs font-bold mt-2"; 
             
-            // ATNAUJINTA GRIEŽTA APVA LOGIKA SU CHEMIJOS TIKRINIMU
             if(hasApva) {
                 if(!hasBattery) {
                     apvaWarning.innerText = "Parama skiriama tik įsirengiant elektrinę KARTU su kaupikliu.";
@@ -1039,9 +1044,12 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             document.getElementById('resSavings').innerText = yearlySavings.toFixed(0);
             document.getElementById('resPayback').innerText = paybackYears;
 
-            // Fiksuojame duomenis išsaugojimo funkcijai
+            // PAPILDYTA INFORMACIJA IŠSAUGOJIMUI
             window.currentProposalData = {
                 power: totalKw.toFixed(2),
+                roofType: roofTypeDisplay,
+                roofArea: roofArea.toFixed(1) + ' m²',
+                remainingModules: remainingModules,
                 modules: `${manualModuleCount} vnt. ${selectedModule.name}`,
                 inverter: hasBattery && batteryMode === 'kit' ? selHybrid.name : (selInverter ? selInverter.name : ''),
                 battery: hasBattery && batteryMode === 'custom' ? selBattery.name : (hasBattery && batteryMode === 'kit' ? "Integruota hibrido komplekte" : "Nėra"),
@@ -1071,10 +1079,22 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                     
                     <div class="space-y-2 text-xs text-slate-700 mb-5">
                         <p class="flex justify-between"><span class="font-semibold text-slate-500">Sistemos galia:</span> <span class="font-bold text-blue-800">${data.power} kWp</span></p>
+                        
+                        <div class="bg-slate-50 p-2 rounded my-2 border border-slate-100">
+                            <p class="flex justify-between mb-1"><span class="font-semibold text-slate-500">Stogo tipas:</span> <span class="font-medium text-slate-800">${data.roofType}</span></p>
+                            <p class="flex justify-between"><span class="font-semibold text-slate-500">Stogo plotas:</span> <span class="font-medium text-slate-800">${data.roofArea}</span></p>
+                        </div>
+                        
                         <p class="flex justify-between"><span class="font-semibold text-slate-500">Įvado galia:</span> <span class="font-medium text-slate-800">${data.gridPower}</span></p>
                         <p class="flex justify-between"><span class="font-semibold text-slate-500">ESO atidavimas:</span> <span class="font-medium text-slate-800">${data.esoCondition}</span></p>
-                        <p class="flex flex-col mt-2"><span class="font-semibold text-slate-500 mb-0.5">Saulės moduliai:</span> <span class="text-slate-800 truncate" title="${data.modules}">${data.modules}</span></p>
-                        <p class="flex flex-col"><span class="font-semibold text-slate-500 mb-0.5">Inverteris:</span> <span class="text-slate-800 truncate" title="${data.inverter}">${data.inverter}</span></p>
+                        
+                        <p class="flex flex-col mt-2">
+                            <span class="font-semibold text-slate-500 mb-0.5">Saulės moduliai:</span> 
+                            <span class="text-slate-800 truncate" title="${data.modules}">${data.modules}</span>
+                            <span class="text-[10px] text-blue-600 font-medium mt-0.5">+ Laisva vieta dar ${data.remainingModules} vnt.</span>
+                        </p>
+                        
+                        <p class="flex flex-col mt-1"><span class="font-semibold text-slate-500 mb-0.5">Inverteris:</span> <span class="text-slate-800 truncate" title="${data.inverter}">${data.inverter}</span></p>
                         <p class="flex justify-between items-center mt-2"><span class="font-semibold text-slate-500">Kaupiklis (Baterija):</span> <span class="font-medium ${data.battery === 'Nėra' ? 'text-slate-400' : 'text-purple-700'}">${data.battery === 'Nėra' ? 'Nėra' : (data.battery.includes('Integruota') ? 'Yra (Integruota)' : 'Yra (Atskiras)')}</span></p>
                         ${data.evStation !== "Nėra" ? `<p class="flex justify-between items-center"><span class="font-semibold text-slate-500">EV Stotelė:</span> <span class="font-medium text-green-700">Pridėta</span></p>` : ''}
                     </div>
