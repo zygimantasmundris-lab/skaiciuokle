@@ -8,431 +8,455 @@
 </head>
 <body class="bg-slate-100 min-h-screen p-4 md:p-8 font-sans">
 
-    <div class="max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden relative">
+    <div class="max-w-5xl mx-auto space-y-8">
         
-        <div class="bg-blue-900 p-6 text-white flex justify-between items-center">
-            <h1 class="text-2xl font-bold">Saulės elektrinės skaičiuoklė</h1>
-            <span class="text-sm bg-blue-800 px-3 py-1 rounded-full border border-blue-700">Pasiūlymo forma</span>
-        </div>
-
-        <div class="p-6 space-y-8">
-
-            <div class="border border-slate-200 rounded-xl p-6 bg-slate-50 shadow-sm">
-                <h2 class="text-lg font-bold text-blue-900 mb-4 border-b pb-2">Užklausa ir objekto vieta</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-semibold mb-1 text-slate-700">Komentaras / Pastabos (Užklausa)</label>
-                            <textarea id="queryText" rows="6" placeholder="Įveskite kliento pageidavimus ar pastabas..." class="w-full border border-slate-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-inner">Kliento metinis elektros suvartojimas – apie 12 000 kWh. Šildosi šilumos siurbliu oras–vanduo. Yra įrengti kondicionieriai. Taip pat neseniai įsigijo vieną elektromobilį.
-Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant investicijos atsiperkamumą, bet tuo pačiu – kad kuo daugiau taupytų. Įvado galingumas – 7 kW. Skundžiasi, kad gana dažnai dingsta elektra.</textarea>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold mb-1 text-slate-700">Objekto adresas</label>
-                            <div class="flex">
-                                <input type="text" id="addressInput" placeholder="Pvz., Gedimino pr. 1, Vilnius" class="flex-1 border border-slate-300 p-3 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-inner">
-                                <button onclick="updateMap()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 rounded-r-lg font-semibold transition-colors">
-                                    Ieškoti
-                                </button>
-                            </div>
-                            <p class="text-xs text-slate-500 mt-1">Įrašykite adresą ir paspauskite „Ieškoti“, kad pamatytumėte jį žemėlapyje.</p>
-                        </div>
-                    </div>
-
-                    <div class="rounded-lg overflow-hidden border border-slate-300 shadow-sm bg-white h-48 md:h-full min-h-[200px] relative">
-                        <iframe 
-                            id="gmap_canvas" 
-                            width="100%" 
-                            height="100%" 
-                            frameborder="0" 
-                            scrolling="no" 
-                            marginheight="0" 
-                            marginwidth="0" 
-                            src="https://maps.google.com/maps?q=Lithuania&t=&z=6&ie=UTF8&iwloc=&output=embed"
-                            class="absolute inset-0">
-                        </iframe>
-                    </div>
-                </div>
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden relative">
+            
+            <div class="bg-blue-900 p-6 text-white flex justify-between items-center">
+                <h1 class="text-2xl font-bold">Saulės elektrinės skaičiuoklė</h1>
+                <span class="text-sm bg-blue-800 px-3 py-1 rounded-full border border-blue-700">Pasiūlymo forma</span>
             </div>
 
-            <div class="border border-slate-200 rounded-xl p-6 bg-white shadow-sm">
-                <h2 class="text-lg font-bold text-blue-900 mb-4 border-b pb-2">1. Techniniai parametrai ir suvartojimas</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="p-6 space-y-8">
+
+                <div class="border border-slate-200 rounded-xl p-6 bg-slate-50 shadow-sm">
+                    <h2 class="text-lg font-bold text-blue-900 mb-4 border-b pb-2">Užklausa ir objekto vieta</h2>
                     
-                    <div>
-                        <label class="block text-sm font-semibold mb-1">Įvado galia (kW)</label>
-                        <select id="gridPower" class="w-full border border-slate-300 p-2 rounded focus:ring-blue-500 focus:border-blue-500"></select>
-                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-semibold mb-1 text-slate-700">Komentaras / Pastabos (Užklausa)</label>
+                                <textarea id="queryText" rows="6" placeholder="Įveskite kliento pageidavimus ar pastabas..." class="w-full border border-slate-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-inner">Kliento metinis elektros suvartojimas – apie 12 000 kWh. Šildosi šilumos siurbliu oras–vanduo. Yra įrengti kondicionieriai. Taip pat neseniai įsigijo vieną elektromobilį.
+Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant investicijos atsiperkamumą, bet tuo pačiu – kad kuo daugiau taupytų. Įvado galingumas – 7 kW. Skundžiasi, kad gana dažnai dingsta elektra.</textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1 text-slate-700">Objekto adresas</label>
+                                <div class="flex">
+                                    <input type="text" id="addressInput" placeholder="Pvz., Gedimino pr. 1, Vilnius" class="flex-1 border border-slate-300 p-3 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-inner">
+                                    <button onclick="updateMap()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 rounded-r-lg font-semibold transition-colors">
+                                        Ieškoti
+                                    </button>
+                                </div>
+                                <p class="text-xs text-slate-500 mt-1">Įrašykite adresą ir paspauskite „Ieškoti“, kad pamatytumėte jį žemėlapyje.</p>
+                            </div>
+                        </div>
 
-                    <div>
-                        <label class="block text-sm font-semibold mb-1">Įvado tipas (Fazės)</label>
-                        <div class="flex space-x-4 mt-2 bg-slate-50 p-2 rounded border border-slate-200">
-                            <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="phase" value="1" onchange="updateEquipmentByPhase()" class="text-blue-600 focus:ring-blue-500"> <span>Vienfazis</span></label>
-                            <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="phase" value="3" onchange="updateEquipmentByPhase()" checked class="text-blue-600 focus:ring-blue-500"> <span>Trifazis</span></label>
+                        <div class="rounded-lg overflow-hidden border border-slate-300 shadow-sm bg-white h-48 md:h-full min-h-[200px] relative">
+                            <iframe 
+                                id="gmap_canvas" 
+                                width="100%" 
+                                height="100%" 
+                                frameborder="0" 
+                                scrolling="no" 
+                                marginheight="0" 
+                                marginwidth="0" 
+                                src="https://maps.google.com/maps?q=Lithuania&t=&z=6&ie=UTF8&iwloc=&output=embed"
+                                class="absolute inset-0">
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border border-slate-200 rounded-xl p-6 bg-white shadow-sm">
+                    <h2 class="text-lg font-bold text-blue-900 mb-4 border-b pb-2">1. Techniniai parametrai ir suvartojimas</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Įvado galia (kW)</label>
+                            <select id="gridPower" class="w-full border border-slate-300 p-2 rounded focus:ring-blue-500 focus:border-blue-500"></select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Įvado tipas (Fazės)</label>
+                            <div class="flex space-x-4 mt-2 bg-slate-50 p-2 rounded border border-slate-200">
+                                <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="phase" value="1" onchange="updateEquipmentByPhase()" class="text-blue-600 focus:ring-blue-500"> <span>Vienfazis</span></label>
+                                <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="phase" value="3" onchange="updateEquipmentByPhase()" checked class="text-blue-600 focus:ring-blue-500"> <span>Trifazis</span></label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Stogo tipas</label>
+                            <div class="flex space-x-4 mt-2 bg-slate-50 p-2 rounded border border-slate-200">
+                                <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="roofType" value="slaitinis" checked class="text-blue-600"> <span>Šlaitinis</span></label>
+                                <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="roofType" value="plokscias" class="text-blue-600"> <span>Plokščias</span></label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Stogo kryptis</label>
+                            <select id="roofDirection" class="w-full border border-slate-300 p-2 rounded bg-white shadow-sm transition-all focus:ring-blue-500">
+                                <option value="1000">Pietūs (Geriausia)</option>
+                                <option value="950" selected>Pietryčiai / Pietvakariai</option>
+                                <option value="850">Rytai / Vakarai</option>
+                                <option value="700">Šiaurės Rytai / Šiaurės Vakarai</option>
+                                <option value="600">Šiaurė</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Stogo danga</label>
+                            <select id="roofCover" class="w-full border border-slate-300 p-2 rounded bg-white shadow-sm transition-all focus:ring-blue-500">
+                                <option value="70">Trapecinė / Valcuota skarda</option>
+                                <option value="70">Skarda (Čerpių imitacija)</option>
+                                <option value="75">Šiferis / Bituminė danga</option>
+                                <option value="85">Keraminės / Betoninės čerpės</option>
+                                <option value="100">Plokščias stogas (Balastinė)</option>
+                            </select>
+                        </div>
+
+                        <div class="col-span-1 md:col-span-2 bg-slate-50 p-3 rounded border border-slate-200">
+                            <div class="flex justify-between items-center mb-3 border-b border-slate-200 pb-2">
+                                <label class="block text-sm font-semibold text-slate-700">Stogo išmatavimai</label>
+                                <button type="button" onclick="addRoofRow()" class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded font-bold hover:bg-blue-200 transition-colors">
+                                    + Pridėti šlaitą
+                                </button>
+                            </div>
+                            
+                            <div id="roofRowsContainer" class="space-y-2">
+                                <div class="flex space-x-3 items-end roof-row">
+                                    <div class="w-5/12">
+                                        <label class="block text-[10px] font-semibold mb-1 text-slate-500 uppercase tracking-wide">Ilgis (m)</label>
+                                        <input type="number" value="10" class="w-full border p-2 rounded text-center roof-length">
+                                    </div>
+                                    <div class="flex items-center justify-center pb-2 text-slate-400">×</div>
+                                    <div class="w-5/12">
+                                        <label class="block text-[10px] font-semibold mb-1 text-slate-500 uppercase tracking-wide">Plotis (m)</label>
+                                        <input type="number" value="5" class="w-full border p-2 rounded text-center roof-width">
+                                    </div>
+                                    <div class="w-2/12 pb-2 text-center flex justify-center">
+                                        <button type="button" onclick="removeRoofRow(this)" class="text-red-400 hover:text-red-600 hidden delete-roof-btn transition-colors">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-3 pt-2 border-t border-slate-200 flex justify-between items-center bg-white p-2 rounded border border-slate-100 shadow-sm">
+                                <div class="text-xs text-slate-500 uppercase font-bold">Bendras stogo plotas:</div>
+                                <div class="font-bold text-lg text-blue-900"><span id="roofAreaDisplay">50</span><span class="text-sm font-normal ml-1">m²</span></div>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-50 p-3 rounded border border-blue-100 transition-all hover:shadow-md">
+                            <label class="flex items-center space-x-3 font-semibold cursor-pointer">
+                                <input type="checkbox" id="esoCheck" class="w-5 h-5 text-blue-600 rounded"> 
+                                <span class="text-blue-900">ESO atidavimas į tinklą</span>
+                            </label>
+                            <div id="esoBox" class="hidden mt-3 pt-3 border-t border-blue-200">
+                                <label class="text-xs font-semibold text-blue-800 uppercase">Leistina generuoti galia:</label>
+                                <select id="esoPower" class="w-full border-blue-300 p-2 rounded text-sm mt-1 bg-white"></select>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-3 rounded border transition-all hover:shadow-md">
+                            <label class="flex items-center space-x-3 font-semibold cursor-pointer">
+                                <input type="checkbox" id="shadowCheck" class="w-5 h-5 text-slate-600 rounded"> 
+                                <span>Krenta šešėlis ant stogo?</span>
+                            </label>
+                            <div id="shadowBox" class="hidden mt-3 pt-3 border-t border-slate-200">
+                                <label class="text-xs font-semibold text-slate-600 uppercase">Šešėlio įtaka (%):</label>
+                                <select id="shadowPercent" class="w-full border-slate-300 p-2 rounded text-sm mt-1 bg-white">
+                                    <option value="10">10%</option><option value="20">20%</option><option value="30">30%</option>
+                                    <option value="40">40%</option><option value="50">50%</option><option value="100">100% (Visiškas)</option>
+                                </select>
+                                <p id="shadowOptimizerNote" class="text-[10px] text-green-600 font-bold mt-2 hidden flex items-center">
+                                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                    Optimizatoriai neutralizuoja šešėlio poveikį!
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="bg-yellow-50 p-3 rounded border border-yellow-200">
+                            <label class="block text-sm font-bold text-yellow-900 mb-1">Suvartojimas per metus (kWh)</label>
+                            <input type="number" id="baseConsumption" value="5000" class="w-full border-yellow-300 p-2 rounded font-bold text-lg">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Jūsų kWh kaina iš tiekėjo (€)</label>
+                            <input type="number" step="0.01" id="kwhPrice" value="0.24" class="w-full border p-2 rounded bg-slate-50">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">PVGIS (1 kWp generuoja, kWh)</label>
+                            <input type="number" id="pvgis" value="950" class="w-full border p-2 rounded bg-slate-50 transition-all focus:ring-blue-500">
+                            <p class="text-[10px] text-slate-500 mt-1">*Keičiasi automatiškai pagal pasirinktą stogo kryptį.</p>
+                        </div>
+
+                        <div class="bg-green-50 p-4 rounded border border-green-200 lg:col-span-3 transition-all hover:shadow-md">
+                            <label class="flex items-center space-x-3 font-bold text-green-900 cursor-pointer">
+                                <input type="checkbox" id="evCheck" class="w-5 h-5 text-green-600 rounded"> 
+                                <span>Turite elektromobilį (EV)?</span>
+                            </label>
+                            <div id="evBox" class="hidden mt-4 pt-4 border-t border-green-200 flex flex-col md:flex-row md:space-x-8 space-y-4 md:space-y-0">
+                                <div class="w-full md:w-1/3">
+                                    <label class="text-xs font-bold text-green-800 uppercase">Kiek kWh įkraunate per metus?</label>
+                                    <input type="number" id="evKwh" value="2000" class="w-full border-green-300 p-2 rounded mt-1 font-semibold">
+                                </div>
+                                <div class="w-full md:w-2/3 flex items-center">
+                                    <label class="flex items-center space-x-3 cursor-pointer bg-white p-2 rounded border border-green-100 w-full hover:bg-green-100 transition-colors">
+                                        <input type="checkbox" id="evStationCheck" class="w-5 h-5 text-green-600 rounded"> 
+                                        <span class="font-semibold text-green-900">Jau turiu krovimo stotelę</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col md:flex-row md:space-x-6 space-y-3 md:space-y-0 lg:col-span-3 border-t border-slate-200 pt-6 mt-2">
+                            <label class="flex items-center space-x-3 font-bold text-purple-700 cursor-pointer bg-purple-50 p-3 rounded border border-purple-100 flex-1 hover:bg-purple-100 transition-colors">
+                                <input type="checkbox" id="batteryCheck" class="w-6 h-6 text-purple-600 rounded"> 
+                                <span>Reikalingas kaupiklis (Baterija)</span>
+                            </label>
+                            
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between bg-emerald-50 p-2 rounded border border-emerald-100 w-full hover:bg-emerald-100 transition-colors">
+                                    <label class="flex items-center space-x-3 font-bold text-emerald-700 cursor-pointer flex-1 pl-1">
+                                        <input type="checkbox" id="apvaCheck" class="w-6 h-6 text-emerald-600 rounded" checked> 
+                                        <span>APVA parama</span>
+                                    </label>
+                                    <button type="button" onclick="openApvaModal()" class="text-emerald-500 hover:text-emerald-700 p-1" title="Kam taikoma kompensacija?">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    </button>
+                                </div>
+                                <p id="apvaWarningMsg" class="text-xs text-red-500 font-bold mt-2 hidden"></p>
+                            </div>
+
+                            <label class="flex items-center space-x-3 font-bold text-slate-700 cursor-pointer bg-slate-100 p-3 rounded border border-slate-200 flex-1 hover:bg-slate-200 transition-colors">
+                                <input type="checkbox" id="installCheck" class="w-6 h-6 text-slate-600 rounded" checked> 
+                                <span>Reikia montavimo</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border border-slate-200 rounded-xl p-6 bg-white shadow-sm">
+                    <h2 class="text-lg font-bold text-blue-900 mb-4 border-b pb-2">2. Įrangos komplektacija</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                        <div id="batteryModeToggleBox" class="hidden col-span-1 md:col-span-2 bg-purple-50 p-4 rounded border border-purple-200 mb-2 transition-all">
+                            <label class="block text-sm font-bold mb-3 text-purple-900 uppercase tracking-wide">Baterijos pasirinkimo būdas</label>
+                            <div class="flex flex-col md:flex-row md:space-x-8 space-y-3 md:space-y-0">
+                                <label class="flex items-center space-x-2 cursor-pointer bg-white px-3 py-2 rounded border border-purple-100 hover:bg-purple-100 transition-colors w-full md:w-auto">
+                                    <input type="radio" name="batteryMode" value="kit" checked class="text-purple-600 focus:ring-purple-500 w-5 h-5">
+                                    <span class="font-semibold text-purple-900">Rinktis paruoštą komplektą</span>
+                                </label>
+                                <label class="flex items-center space-x-2 cursor-pointer bg-white px-3 py-2 rounded border border-purple-100 hover:bg-purple-100 transition-colors w-full md:w-auto">
+                                    <input type="radio" name="batteryMode" value="custom" class="text-purple-600 focus:ring-purple-500 w-5 h-5">
+                                    <span class="font-semibold text-purple-900">Komplektuoti atskirai</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div id="inverterStandardBox" class="bg-slate-50 p-4 rounded border border-slate-200">
+                            <label class="block text-sm font-bold mb-2 text-slate-800 uppercase tracking-wide flex justify-between">
+                                <span>Inverteris <span id="customInverterHint" class="hidden text-[10px] text-purple-600 font-normal ml-2">(Pasirinkite hibridinį)</span></span>
+                            </label>
+                            <select id="inverterSelect" class="w-full border border-slate-300 p-2 rounded bg-white shadow-sm mb-2"></select>
+                            <p id="inverterDesc" class="text-xs text-slate-500 font-medium"></p>
+                        </div>
+
+                        <div id="inverterHybridBox" class="hidden bg-purple-50 p-4 rounded border border-purple-200 shadow-sm relative overflow-hidden">
+                            <div class="absolute top-0 right-0 bg-purple-600 text-white text-[10px] font-bold px-2 py-1 rounded-bl">AKTYVUOTA</div>
+                            <label class="block text-sm font-bold mb-2 text-purple-900 uppercase tracking-wide">Inverteris + Kaupiklis (Komplektas)</label>
+                            <select id="hybridSelect" class="w-full border border-purple-300 p-2 rounded bg-white shadow-sm font-semibold text-purple-900 mb-2"></select>
+                            <p id="hybridDesc" class="text-xs text-purple-700 font-medium opacity-90"></p>
+                        </div>
+
+                        <div id="customBatteryBox" class="hidden bg-purple-50 p-4 rounded border border-purple-200 shadow-sm relative overflow-hidden">
+                            <div class="absolute top-0 right-0 bg-purple-600 text-white text-[10px] font-bold px-2 py-1 rounded-bl">AKTYVUOTA</div>
+                            <label class="block text-sm font-bold mb-2 text-purple-900 uppercase tracking-wide">Atskiras Kaupiklis (Baterija)</label>
+                            <select id="batterySelect" class="w-full border border-purple-300 p-2 rounded bg-white shadow-sm font-semibold text-purple-900 mb-2"></select>
+                            <p id="batteryDesc" class="text-xs text-purple-700 font-medium opacity-90"></p>
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded border border-slate-200 relative">
+                            <label class="block text-sm font-bold mb-2 text-slate-800 uppercase tracking-wide">Saulės moduliai</label>
+                            <select id="moduleSelect" class="w-full border border-slate-300 p-2 rounded bg-white shadow-sm mb-2"></select>
+                            
+                            <p class="text-xs text-slate-500 mb-3 font-medium">
+                                Maksimaliai ant stogo telpa: <span id="maxModuleCount" class="font-bold text-blue-600 text-sm">0</span> vnt.
+                            </p>
+
+                            <div class="flex items-center bg-blue-50 p-3 rounded border border-blue-100 shadow-sm">
+                                <div class="w-1/2 pr-2">
+                                    <label class="block text-[10px] font-bold text-blue-800 uppercase mb-1">Norimas kiekis (vnt.)</label>
+                                    <input type="number" id="manualModuleCount" value="12" min="1" class="w-full border border-blue-300 p-2 rounded font-bold text-lg focus:ring-blue-500 focus:border-blue-500 text-center">
+                                </div>
+                                <div class="w-1/2 border-l border-blue-200 pl-3 text-center">
+                                    <label class="block text-[10px] font-bold text-blue-800 uppercase mb-1">Sistemos galia</label>
+                                    <div class="font-black text-xl text-blue-900"><span id="modulePowerDisplay">0.00</span> <span class="text-sm font-bold">kWp</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded border border-slate-200">
+                            <label class="block text-sm font-bold mb-2 text-slate-800 uppercase tracking-wide">Optimizatoriai</label>
+                            <select id="optimizerSelect" class="w-full border border-slate-300 p-2 rounded bg-white shadow-sm"></select>
+                            <p id="optimizerDesc" class="text-xs text-slate-600 font-medium mt-2 hidden bg-white p-2 border border-slate-100 rounded shadow-sm">
+                                Įskaičiuotas Tigo TS4-A-O optimizatorius (52.27 €/vnt.) ir būtinas TIGO valdymo rinkinys (CCA+TAP+PS) už 278.30 €.
+                            </p>
+                        </div>
+
+                        <div id="evStationProductBox" class="hidden bg-green-50 p-4 rounded border border-green-200 shadow-sm relative">
+                            <div class="absolute top-0 right-0 bg-green-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl">REKOMENDACIJA</div>
+                            <label class="block text-sm font-bold mb-2 text-green-900 uppercase tracking-wide">Krovimo stotelė</label>
+                            <select id="evStationSelect" class="w-full border border-green-300 p-2 rounded bg-white shadow-sm font-semibold text-green-900"></select>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    <div class="bg-slate-900 text-white rounded-2xl p-6 md:p-8 shadow-2xl relative overflow-hidden">
+                        <div class="absolute -right-10 -top-10 w-40 h-40 bg-blue-600 rounded-full mix-blend-multiply filter blur-2xl opacity-50"></div>
+                        <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-purple-600 rounded-full mix-blend-multiply filter blur-2xl opacity-50"></div>
+                        
+                        <h3 class="text-xl font-bold mb-6 border-b border-slate-700 pb-3 relative z-10 flex items-center">
+                            <svg class="w-6 h-6 mr-2 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                            Projekto sąmata
+                        </h3>
+                        
+                        <div class="space-y-3 text-sm text-slate-300 mb-8 relative z-10">
+                            <div class="flex justify-between items-center py-1">
+                                <span class="font-bold text-white">Įrangos kaina:</span> <span id="resEquipPrice" class="font-semibold text-white">0 €</span>
+                            </div>
+                            <div id="equipBreakdown" class="text-xs text-slate-400 pb-2 border-b border-slate-800 space-y-1">
+                                </div>
+
+                            <div class="pt-2">
+                                <div class="flex justify-between items-center py-1">
+                                    <span class="font-bold text-white">Montavimas ir konstrukcijos:</span> <span id="resInstallPrice" class="font-semibold text-white">0 €</span>
+                                </div>
+                                <div id="installBreakdown" class="text-xs text-slate-400 pb-2 border-b border-slate-800 space-y-1">
+                                    </div>
+                            </div>
+
+                            <div id="apvaDiscountBox" class="flex justify-between items-center py-2 text-emerald-400 bg-emerald-900/30 px-3 rounded -mx-3 mt-2">
+                                <span class="font-bold flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                    APVA kompensacija:
+                                </span> 
+                                <span id="resApva" class="font-black text-lg">-0 €</span>
+                            </div>
+                        </div>
+
+                        <div class="pt-6 border-t border-slate-700 relative z-10">
+                            <div class="flex justify-between items-end mb-2">
+                                <p class="text-sm text-slate-400">Kaina be paramos:</p>
+                                <span id="resTotalNoApva" class="font-bold text-slate-300">0 €</span>
+                            </div>
+                            <div class="bg-blue-600 rounded-xl p-4 text-center shadow-inner mt-4">
+                                <p class="text-blue-200 text-sm font-bold uppercase tracking-widest mb-1">Galutinė investicija</p>
+                                <div class="text-4xl font-black text-white">
+                                    <span id="resTotal">0</span> <span class="text-2xl text-blue-300">€</span>
+                                </div>
+                            </div>
+                            <p id="apvaNote" class="text-xs text-center text-emerald-400 mt-3 font-medium">*Suma nurodyta jau pritaikius valstybės paramą</p>
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-semibold mb-1">Stogo tipas</label>
-                        <div class="flex space-x-4 mt-2 bg-slate-50 p-2 rounded border border-slate-200">
-                            <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="roofType" value="slaitinis" checked class="text-blue-600"> <span>Šlaitinis</span></label>
-                            <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="roofType" value="plokscias" class="text-blue-600"> <span>Plokščias</span></label>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold mb-1">Stogo kryptis</label>
-                        <select id="roofDirection" class="w-full border border-slate-300 p-2 rounded bg-white shadow-sm transition-all focus:ring-blue-500">
-                            <option value="1000">Pietūs (Geriausia)</option>
-                            <option value="950" selected>Pietryčiai / Pietvakariai</option>
-                            <option value="850">Rytai / Vakarai</option>
-                            <option value="700">Šiaurės Rytai / Šiaurės Vakarai</option>
-                            <option value="600">Šiaurė</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold mb-1">Stogo danga</label>
-                        <select id="roofCover" class="w-full border border-slate-300 p-2 rounded bg-white shadow-sm transition-all focus:ring-blue-500">
-                            <option value="70">Trapecinė / Valcuota skarda</option>
-                            <option value="70">Skarda (Čerpių imitacija)</option>
-                            <option value="75">Šiferis / Bituminė danga</option>
-                            <option value="85">Keraminės / Betoninės čerpės</option>
-                            <option value="100">Plokščias stogas (Balastinė)</option>
-                        </select>
-                    </div>
-
-                    <div class="col-span-1 md:col-span-2 bg-slate-50 p-3 rounded border border-slate-200">
-                        <div class="flex justify-between items-center mb-3 border-b border-slate-200 pb-2">
-                            <label class="block text-sm font-semibold text-slate-700">Stogo išmatavimai</label>
-                            <button type="button" onclick="addRoofRow()" class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded font-bold hover:bg-blue-200 transition-colors">
-                                + Pridėti šlaitą
+                    <div class="bg-white border-2 border-blue-100 rounded-2xl p-6 md:p-8 shadow-xl flex flex-col">
+                        
+                        <div class="flex justify-between items-center mb-6 border-b border-blue-100 pb-3">
+                            <h3 class="text-xl font-bold text-blue-900 flex items-center">
+                                <svg class="w-6 h-6 mr-2 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                Efektyvumo analizė
+                            </h3>
+                            <button onclick="openLogicModal()" class="text-blue-500 hover:text-blue-700 transition-colors p-1" title="Bendra skaičiavimo logika">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             </button>
                         </div>
                         
-                        <div id="roofRowsContainer" class="space-y-2">
-                            <div class="flex space-x-3 items-end roof-row">
-                                <div class="w-5/12">
-                                    <label class="block text-[10px] font-semibold mb-1 text-slate-500 uppercase tracking-wide">Ilgis (m)</label>
-                                    <input type="number" value="10" class="w-full border p-2 rounded text-center roof-length">
-                                </div>
-                                <div class="flex items-center justify-center pb-2 text-slate-400">×</div>
-                                <div class="w-5/12">
-                                    <label class="block text-[10px] font-semibold mb-1 text-slate-500 uppercase tracking-wide">Plotis (m)</label>
-                                    <input type="number" value="5" class="w-full border p-2 rounded text-center roof-width">
-                                </div>
-                                <div class="w-2/12 pb-2 text-center flex justify-center">
-                                    <button type="button" onclick="removeRoofRow(this)" class="text-red-400 hover:text-red-600 hidden delete-roof-btn transition-colors">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                <p class="text-[10px] uppercase font-bold text-slate-500 mb-1">Bendras poreikis</p>
+                                <p class="text-2xl font-black text-slate-800"><span id="resTotalConsumption">0</span><span class="text-sm text-slate-500 font-normal ml-1">kWh</span></p>
+                                <p id="evConsumptionNote" class="text-[10px] text-green-600 font-semibold mt-1 hidden">+ EV krovimas</p>
+                            </div>
+                            
+                            <div class="bg-blue-50 p-4 rounded-xl border border-blue-100 relative">
+                                <div class="flex justify-between items-start mb-1">
+                                    <p class="text-[10px] uppercase font-bold text-blue-600">Sistemos galia</p>
+                                    <button onclick="openMathModal()" class="text-blue-400 hover:text-blue-600 p-0.5" title="Kaip apskaičiuota generacija?">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                     </button>
                                 </div>
-                            </div>
-                        </div>
-
-                        <div class="mt-3 pt-2 border-t border-slate-200 flex justify-between items-center bg-white p-2 rounded border border-slate-100 shadow-sm">
-                            <div class="text-xs text-slate-500 uppercase font-bold">Bendras stogo plotas:</div>
-                            <div class="font-bold text-lg text-blue-900"><span id="roofAreaDisplay">50</span><span class="text-sm font-normal ml-1">m²</span></div>
-                        </div>
-                    </div>
-
-                    <div class="bg-blue-50 p-3 rounded border border-blue-100 transition-all hover:shadow-md">
-                        <label class="flex items-center space-x-3 font-semibold cursor-pointer">
-                            <input type="checkbox" id="esoCheck" class="w-5 h-5 text-blue-600 rounded"> 
-                            <span class="text-blue-900">ESO atidavimas į tinklą</span>
-                        </label>
-                        <div id="esoBox" class="hidden mt-3 pt-3 border-t border-blue-200">
-                            <label class="text-xs font-semibold text-blue-800 uppercase">Leistina generuoti galia:</label>
-                            <select id="esoPower" class="w-full border-blue-300 p-2 rounded text-sm mt-1 bg-white"></select>
-                        </div>
-                    </div>
-
-                    <div class="bg-slate-50 p-3 rounded border transition-all hover:shadow-md">
-                        <label class="flex items-center space-x-3 font-semibold cursor-pointer">
-                            <input type="checkbox" id="shadowCheck" class="w-5 h-5 text-slate-600 rounded"> 
-                            <span>Krenta šešėlis ant stogo?</span>
-                        </label>
-                        <div id="shadowBox" class="hidden mt-3 pt-3 border-t border-slate-200">
-                            <label class="text-xs font-semibold text-slate-600 uppercase">Šešėlio įtaka (%):</label>
-                            <select id="shadowPercent" class="w-full border-slate-300 p-2 rounded text-sm mt-1 bg-white">
-                                <option value="10">10%</option><option value="20">20%</option><option value="30">30%</option>
-                                <option value="40">40%</option><option value="50">50%</option><option value="100">100% (Visiškas)</option>
-                            </select>
-                            <p id="shadowOptimizerNote" class="text-[10px] text-green-600 font-bold mt-2 hidden flex items-center">
-                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                Optimizatoriai neutralizuoja šešėlio poveikį!
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="bg-yellow-50 p-3 rounded border border-yellow-200">
-                        <label class="block text-sm font-bold text-yellow-900 mb-1">Suvartojimas per metus (kWh)</label>
-                        <input type="number" id="baseConsumption" value="5000" class="w-full border-yellow-300 p-2 rounded font-bold text-lg">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold mb-1">Jūsų kWh kaina iš tiekėjo (€)</label>
-                        <input type="number" step="0.01" id="kwhPrice" value="0.24" class="w-full border p-2 rounded bg-slate-50">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold mb-1">PVGIS (1 kWp generuoja, kWh)</label>
-                        <input type="number" id="pvgis" value="950" class="w-full border p-2 rounded bg-slate-50 transition-all focus:ring-blue-500">
-                        <p class="text-[10px] text-slate-500 mt-1">*Keičiasi automatiškai pagal pasirinktą stogo kryptį.</p>
-                    </div>
-
-                    <div class="bg-green-50 p-4 rounded border border-green-200 lg:col-span-3 transition-all hover:shadow-md">
-                        <label class="flex items-center space-x-3 font-bold text-green-900 cursor-pointer">
-                            <input type="checkbox" id="evCheck" class="w-5 h-5 text-green-600 rounded"> 
-                            <span>Turite elektromobilį (EV)?</span>
-                        </label>
-                        <div id="evBox" class="hidden mt-4 pt-4 border-t border-green-200 flex flex-col md:flex-row md:space-x-8 space-y-4 md:space-y-0">
-                            <div class="w-full md:w-1/3">
-                                <label class="text-xs font-bold text-green-800 uppercase">Kiek kWh įkraunate per metus?</label>
-                                <input type="number" id="evKwh" value="2000" class="w-full border-green-300 p-2 rounded mt-1 font-semibold">
-                            </div>
-                            <div class="w-full md:w-2/3 flex items-center">
-                                <label class="flex items-center space-x-3 cursor-pointer bg-white p-2 rounded border border-green-100 w-full hover:bg-green-100 transition-colors">
-                                    <input type="checkbox" id="evStationCheck" class="w-5 h-5 text-green-600 rounded"> 
-                                    <span class="font-semibold text-green-900">Jau turiu krovimo stotelę</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-col md:flex-row md:space-x-6 space-y-3 md:space-y-0 lg:col-span-3 border-t border-slate-200 pt-6 mt-2">
-                        <label class="flex items-center space-x-3 font-bold text-purple-700 cursor-pointer bg-purple-50 p-3 rounded border border-purple-100 flex-1 hover:bg-purple-100 transition-colors">
-                            <input type="checkbox" id="batteryCheck" class="w-6 h-6 text-purple-600 rounded"> 
-                            <span>Reikalingas kaupiklis (Baterija)</span>
-                        </label>
-                        
-                        <div class="flex-1">
-                            <div class="flex items-center justify-between bg-emerald-50 p-2 rounded border border-emerald-100 w-full hover:bg-emerald-100 transition-colors">
-                                <label class="flex items-center space-x-3 font-bold text-emerald-700 cursor-pointer flex-1 pl-1">
-                                    <input type="checkbox" id="apvaCheck" class="w-6 h-6 text-emerald-600 rounded" checked> 
-                                    <span>APVA parama</span>
-                                </label>
-                                <button type="button" onclick="openApvaModal()" class="text-emerald-500 hover:text-emerald-700 p-1" title="Kam taikoma kompensacija?">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                </button>
-                            </div>
-                            <p id="apvaWarningMsg" class="text-xs text-red-500 font-bold mt-2 hidden"></p>
-                        </div>
-
-                        <label class="flex items-center space-x-3 font-bold text-slate-700 cursor-pointer bg-slate-100 p-3 rounded border border-slate-200 flex-1 hover:bg-slate-200 transition-colors">
-                            <input type="checkbox" id="installCheck" class="w-6 h-6 text-slate-600 rounded" checked> 
-                            <span>Reikia montavimo</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="border border-slate-200 rounded-xl p-6 bg-white shadow-sm">
-                <h2 class="text-lg font-bold text-blue-900 mb-4 border-b pb-2">2. Įrangos komplektacija</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-                    <div id="batteryModeToggleBox" class="hidden col-span-1 md:col-span-2 bg-purple-50 p-4 rounded border border-purple-200 mb-2 transition-all">
-                        <label class="block text-sm font-bold mb-3 text-purple-900 uppercase tracking-wide">Baterijos pasirinkimo būdas</label>
-                        <div class="flex flex-col md:flex-row md:space-x-8 space-y-3 md:space-y-0">
-                            <label class="flex items-center space-x-2 cursor-pointer bg-white px-3 py-2 rounded border border-purple-100 hover:bg-purple-100 transition-colors w-full md:w-auto">
-                                <input type="radio" name="batteryMode" value="kit" checked class="text-purple-600 focus:ring-purple-500 w-5 h-5">
-                                <span class="font-semibold text-purple-900">Rinktis paruoštą komplektą</span>
-                            </label>
-                            <label class="flex items-center space-x-2 cursor-pointer bg-white px-3 py-2 rounded border border-purple-100 hover:bg-purple-100 transition-colors w-full md:w-auto">
-                                <input type="radio" name="batteryMode" value="custom" class="text-purple-600 focus:ring-purple-500 w-5 h-5">
-                                <span class="font-semibold text-purple-900">Komplektuoti atskirai</span>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div id="inverterStandardBox" class="bg-slate-50 p-4 rounded border border-slate-200">
-                        <label class="block text-sm font-bold mb-2 text-slate-800 uppercase tracking-wide flex justify-between">
-                            <span>Inverteris <span id="customInverterHint" class="hidden text-[10px] text-purple-600 font-normal ml-2">(Pasirinkite hibridinį)</span></span>
-                        </label>
-                        <select id="inverterSelect" class="w-full border border-slate-300 p-2 rounded bg-white shadow-sm mb-2"></select>
-                        <p id="inverterDesc" class="text-xs text-slate-500 font-medium"></p>
-                    </div>
-
-                    <div id="inverterHybridBox" class="hidden bg-purple-50 p-4 rounded border border-purple-200 shadow-sm relative overflow-hidden">
-                        <div class="absolute top-0 right-0 bg-purple-600 text-white text-[10px] font-bold px-2 py-1 rounded-bl">AKTYVUOTA</div>
-                        <label class="block text-sm font-bold mb-2 text-purple-900 uppercase tracking-wide">Inverteris + Kaupiklis (Komplektas)</label>
-                        <select id="hybridSelect" class="w-full border border-purple-300 p-2 rounded bg-white shadow-sm font-semibold text-purple-900 mb-2"></select>
-                        <p id="hybridDesc" class="text-xs text-purple-700 font-medium opacity-90"></p>
-                    </div>
-
-                    <div id="customBatteryBox" class="hidden bg-purple-50 p-4 rounded border border-purple-200 shadow-sm relative overflow-hidden">
-                        <div class="absolute top-0 right-0 bg-purple-600 text-white text-[10px] font-bold px-2 py-1 rounded-bl">AKTYVUOTA</div>
-                        <label class="block text-sm font-bold mb-2 text-purple-900 uppercase tracking-wide">Atskiras Kaupiklis (Baterija)</label>
-                        <select id="batterySelect" class="w-full border border-purple-300 p-2 rounded bg-white shadow-sm font-semibold text-purple-900 mb-2"></select>
-                        <p id="batteryDesc" class="text-xs text-purple-700 font-medium opacity-90"></p>
-                    </div>
-
-                    <div class="bg-slate-50 p-4 rounded border border-slate-200 relative">
-                        <label class="block text-sm font-bold mb-2 text-slate-800 uppercase tracking-wide">Saulės moduliai</label>
-                        <select id="moduleSelect" class="w-full border border-slate-300 p-2 rounded bg-white shadow-sm mb-2"></select>
-                        
-                        <p class="text-xs text-slate-500 mb-3 font-medium">
-                            Maksimaliai ant stogo telpa: <span id="maxModuleCount" class="font-bold text-blue-600 text-sm">0</span> vnt.
-                        </p>
-
-                        <div class="flex items-center bg-blue-50 p-3 rounded border border-blue-100 shadow-sm">
-                            <div class="w-1/2 pr-2">
-                                <label class="block text-[10px] font-bold text-blue-800 uppercase mb-1">Norimas kiekis (vnt.)</label>
-                                <input type="number" id="manualModuleCount" value="12" min="1" class="w-full border border-blue-300 p-2 rounded font-bold text-lg focus:ring-blue-500 focus:border-blue-500 text-center">
-                            </div>
-                            <div class="w-1/2 border-l border-blue-200 pl-3 text-center">
-                                <label class="block text-[10px] font-bold text-blue-800 uppercase mb-1">Sistemos galia</label>
-                                <div class="font-black text-xl text-blue-900"><span id="modulePowerDisplay">0.00</span> <span class="text-sm font-bold">kWp</span></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-slate-50 p-4 rounded border border-slate-200">
-                        <label class="block text-sm font-bold mb-2 text-slate-800 uppercase tracking-wide">Optimizatoriai</label>
-                        <select id="optimizerSelect" class="w-full border border-slate-300 p-2 rounded bg-white shadow-sm"></select>
-                        <p id="optimizerDesc" class="text-xs text-slate-600 font-medium mt-2 hidden bg-white p-2 border border-slate-100 rounded shadow-sm">
-                            Įskaičiuotas Tigo TS4-A-O optimizatorius (52.27 €/vnt.) ir būtinas TIGO valdymo rinkinys (CCA+TAP+PS) už 278.30 €.
-                        </p>
-                    </div>
-
-                    <div id="evStationProductBox" class="hidden bg-green-50 p-4 rounded border border-green-200 shadow-sm relative">
-                        <div class="absolute top-0 right-0 bg-green-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl">REKOMENDACIJA</div>
-                        <label class="block text-sm font-bold mb-2 text-green-900 uppercase tracking-wide">Krovimo stotelė</label>
-                        <select id="evStationSelect" class="w-full border border-green-300 p-2 rounded bg-white shadow-sm font-semibold text-green-900"></select>
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                
-                <div class="bg-slate-900 text-white rounded-2xl p-6 md:p-8 shadow-2xl relative overflow-hidden">
-                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-blue-600 rounded-full mix-blend-multiply filter blur-2xl opacity-50"></div>
-                    <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-purple-600 rounded-full mix-blend-multiply filter blur-2xl opacity-50"></div>
-                    
-                    <h3 class="text-xl font-bold mb-6 border-b border-slate-700 pb-3 relative z-10 flex items-center">
-                        <svg class="w-6 h-6 mr-2 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                        Projekto sąmata
-                    </h3>
-                    
-                    <div class="space-y-3 text-sm text-slate-300 mb-8 relative z-10">
-                        <div class="flex justify-between items-center py-1">
-                            <span class="font-bold text-white">Įrangos kaina:</span> <span id="resEquipPrice" class="font-semibold text-white">0 €</span>
-                        </div>
-                        <div id="equipBreakdown" class="text-xs text-slate-400 pb-2 border-b border-slate-800 space-y-1">
-                            </div>
-
-                        <div class="pt-2">
-                            <div class="flex justify-between items-center py-1">
-                                <span class="font-bold text-white">Montavimas ir konstrukcijos:</span> <span id="resInstallPrice" class="font-semibold text-white">0 €</span>
-                            </div>
-                            <div id="installBreakdown" class="text-xs text-slate-400 pb-2 border-b border-slate-800 space-y-1">
-                                </div>
-                        </div>
-
-                        <div id="apvaDiscountBox" class="flex justify-between items-center py-2 text-emerald-400 bg-emerald-900/30 px-3 rounded -mx-3 mt-2">
-                            <span class="font-bold flex items-center">
-                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                APVA kompensacija:
-                            </span> 
-                            <span id="resApva" class="font-black text-lg">-0 €</span>
-                        </div>
-                    </div>
-
-                    <div class="pt-6 border-t border-slate-700 relative z-10">
-                        <div class="flex justify-between items-end mb-2">
-                            <p class="text-sm text-slate-400">Kaina be paramos:</p>
-                            <span id="resTotalNoApva" class="font-bold text-slate-300">0 €</span>
-                        </div>
-                        <div class="bg-blue-600 rounded-xl p-4 text-center shadow-inner mt-4">
-                            <p class="text-blue-200 text-sm font-bold uppercase tracking-widest mb-1">Galutinė investicija</p>
-                            <div class="text-4xl font-black text-white">
-                                <span id="resTotal">0</span> <span class="text-2xl text-blue-300">€</span>
-                            </div>
-                        </div>
-                        <p id="apvaNote" class="text-xs text-center text-emerald-400 mt-3 font-medium">*Suma nurodyta jau pritaikius valstybės paramą</p>
-                    </div>
-                </div>
-
-                <div class="bg-white border-2 border-blue-100 rounded-2xl p-6 md:p-8 shadow-xl flex flex-col">
-                    
-                    <div class="flex justify-between items-center mb-6 border-b border-blue-100 pb-3">
-                        <h3 class="text-xl font-bold text-blue-900 flex items-center">
-                            <svg class="w-6 h-6 mr-2 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                            Efektyvumo analizė
-                        </h3>
-                        <button onclick="openLogicModal()" class="text-blue-500 hover:text-blue-700 transition-colors p-1" title="Bendra skaičiavimo logika">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        </button>
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-4 mb-4">
-                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                            <p class="text-[10px] uppercase font-bold text-slate-500 mb-1">Bendras poreikis</p>
-                            <p class="text-2xl font-black text-slate-800"><span id="resTotalConsumption">0</span><span class="text-sm text-slate-500 font-normal ml-1">kWh</span></p>
-                            <p id="evConsumptionNote" class="text-[10px] text-green-600 font-semibold mt-1 hidden">+ EV krovimas</p>
-                        </div>
-                        
-                        <div class="bg-blue-50 p-4 rounded-xl border border-blue-100 relative">
-                            <div class="flex justify-between items-start mb-1">
-                                <p class="text-[10px] uppercase font-bold text-blue-600">Sistemos galia</p>
-                                <button onclick="openMathModal()" class="text-blue-400 hover:text-blue-600 p-0.5" title="Kaip apskaičiuota generacija?">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                </button>
-                            </div>
-                            <p class="text-2xl font-black text-blue-900"><span id="resKw">0</span><span class="text-sm text-blue-600 font-normal ml-1">kWp</span></p>
-                            <p class="text-[10px] text-blue-600 mt-1 flex flex-col">
-                                <span>Generuos: <span id="resGenerated" class="font-bold">0</span> kWh/m.</span>
-                            </p>
-                        </div>
-                    </div>
-
-                    <div id="batteryInfoBox" class="hidden bg-purple-50 p-4 rounded-xl border border-purple-200 mb-4 flex flex-col space-y-2 text-sm shadow-sm">
-                        <h4 class="text-purple-900 font-bold border-b border-purple-200 pb-1 mb-1 flex items-center uppercase tracking-wide text-xs">
-                            <svg class="w-4 h-4 mr-1 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                            Baterijos įkrovimo prognozė (vidurdienį)
-                        </h4>
-                        <div class="flex justify-between items-center">
-                            <span class="text-purple-700 font-medium">Vasarą:</span>
-                            <span class="font-black text-purple-900">~<span id="resBatSummer">0</span> val.</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-purple-700 font-medium">Pavasarį:</span>
-                            <span class="font-black text-purple-900">~<span id="resBatSpring">0</span> val.</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-purple-700 font-medium">Rudenį:</span>
-                            <span class="font-black text-purple-900">~<span id="resBatAutumn">0</span> val.</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-purple-700 font-medium">Žiemą:</span>
-                            <span class="font-black text-purple-900">~<span id="resBatWinter">0</span> val.</span>
-                        </div>
-                        <p class="text-[10px] text-purple-500 mt-1 leading-tight italic">*Apytikslis laikas. Reali trukmė priklauso nuo namo momentinio suvartojimo.</p>
-                    </div>
-
-                    <div class="mt-auto space-y-4">
-                        <div class="bg-green-50 p-5 rounded-xl border border-green-200 flex justify-between items-center">
-                            <div>
-                                <p class="text-xs uppercase font-bold text-green-700 mb-1">Sutaupysite per metus</p>
-                                <p class="text-3xl font-black text-green-600">~ <span id="resSavings">0</span> €</p>
-                                <p id="esoStorageNote" class="text-[10px] text-green-800 font-medium mt-1 leading-tight hidden">
-                                    *Įskaičiuotas ESO mokestis atiduodant perteklinę energiją.
+                                <p class="text-2xl font-black text-blue-900"><span id="resKw">0</span><span class="text-sm text-blue-600 font-normal ml-1">kWp</span></p>
+                                <p class="text-[10px] text-blue-600 mt-1 flex flex-col">
+                                    <span>Generuos: <span id="resGenerated" class="font-bold">0</span> kWh/m.</span>
                                 </p>
                             </div>
-                            <svg class="w-10 h-10 text-green-300 opacity-50" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
                         </div>
 
-                        <div class="text-center pt-4">
-                            <p class="text-sm text-slate-500 uppercase font-semibold tracking-wider">Investicijos grąža</p>
-                            <p class="text-5xl font-black text-blue-900 mt-1"><span id="resPayback">0</span> <span class="text-lg text-slate-500 font-medium">metų</span></p>
+                        <div id="batteryInfoBox" class="hidden bg-purple-50 p-4 rounded-xl border border-purple-200 mb-4 flex flex-col space-y-2 text-sm shadow-sm">
+                            <h4 class="text-purple-900 font-bold border-b border-purple-200 pb-1 mb-1 flex items-center uppercase tracking-wide text-xs">
+                                <svg class="w-4 h-4 mr-1 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                Baterijos įkrovimo prognozė (vidurdienį)
+                            </h4>
+                            <div class="flex justify-between items-center">
+                                <span class="text-purple-700 font-medium">Vasarą:</span>
+                                <span class="font-black text-purple-900">~<span id="resBatSummer">0</span> val.</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-purple-700 font-medium">Pavasarį:</span>
+                                <span class="font-black text-purple-900">~<span id="resBatSpring">0</span> val.</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-purple-700 font-medium">Rudenį:</span>
+                                <span class="font-black text-purple-900">~<span id="resBatAutumn">0</span> val.</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-purple-700 font-medium">Žiemą:</span>
+                                <span class="font-black text-purple-900">~<span id="resBatWinter">0</span> val.</span>
+                            </div>
+                            <p class="text-[10px] text-purple-500 mt-1 leading-tight italic">*Apytikslis laikas. Reali trukmė priklauso nuo namo momentinio suvartojimo.</p>
+                        </div>
+
+                        <div class="mt-auto space-y-4">
+                            <div class="bg-green-50 p-5 rounded-xl border border-green-200 flex justify-between items-center">
+                                <div>
+                                    <p class="text-xs uppercase font-bold text-green-700 mb-1">Sutaupysite per metus</p>
+                                    <p class="text-3xl font-black text-green-600">~ <span id="resSavings">0</span> €</p>
+                                    <p id="esoStorageNote" class="text-[10px] text-green-800 font-medium mt-1 leading-tight hidden">
+                                        *Įskaičiuotas ESO mokestis atiduodant perteklinę energiją.
+                                    </p>
+                                </div>
+                                <svg class="w-10 h-10 text-green-300 opacity-50" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
+                            </div>
+
+                            <div class="text-center pt-4">
+                                <p class="text-sm text-slate-500 uppercase font-semibold tracking-wider">Investicijos grąža</p>
+                                <p class="text-5xl font-black text-blue-900 mt-1"><span id="resPayback">0</span> <span class="text-lg text-slate-500 font-medium">metų</span></p>
+                            </div>
                         </div>
                     </div>
+
+                </div>
+
+                <div class="pt-6 border-t border-slate-200 text-center">
+                    <button onclick="saveProposal()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+                        + Išsaugoti variantą palyginimui
+                    </button>
+                    <p class="text-xs text-slate-500 mt-2">Išsaugokite kelis variantus ir palyginkite juos žemiau.</p>
                 </div>
 
             </div>
         </div>
+
+        <div id="savedProposalsSection" class="hidden">
+            <div class="flex items-center justify-between mb-4 px-2">
+                <h2 class="text-2xl font-bold text-blue-900 flex items-center">
+                    <svg class="w-7 h-7 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                    Išsaugoti pasiūlymai (Palyginimui)
+                </h2>
+            </div>
+            
+            <div id="proposalsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                </div>
+        </div>
+
     </div>
 
     <div id="apvaModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
@@ -534,36 +558,17 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
 
     <script>
         // MODALŲ LOGIKA
-        function openLogicModal() {
-            document.getElementById('logicModal').classList.remove('hidden');
-        }
-        function closeLogicModal() {
-            document.getElementById('logicModal').classList.add('hidden');
-        }
-        document.getElementById('logicModal').addEventListener('click', function(e) {
-            if (e.target === this) closeLogicModal();
-        });
+        function openLogicModal() { document.getElementById('logicModal').classList.remove('hidden'); }
+        function closeLogicModal() { document.getElementById('logicModal').classList.add('hidden'); }
+        document.getElementById('logicModal').addEventListener('click', function(e) { if (e.target === this) closeLogicModal(); });
 
-        function openApvaModal() {
-            document.getElementById('apvaModal').classList.remove('hidden');
-        }
-        function closeApvaModal() {
-            document.getElementById('apvaModal').classList.add('hidden');
-        }
-        document.getElementById('apvaModal').addEventListener('click', function(e) {
-            if (e.target === this) closeApvaModal();
-        });
+        function openApvaModal() { document.getElementById('apvaModal').classList.remove('hidden'); }
+        function closeApvaModal() { document.getElementById('apvaModal').classList.add('hidden'); }
+        document.getElementById('apvaModal').addEventListener('click', function(e) { if (e.target === this) closeApvaModal(); });
 
-        function openMathModal() {
-            document.getElementById('mathModal').classList.remove('hidden');
-        }
-        function closeMathModal() {
-            document.getElementById('mathModal').classList.add('hidden');
-        }
-        document.getElementById('mathModal').addEventListener('click', function(e) {
-            if (e.target === this) closeMathModal();
-        });
-
+        function openMathModal() { document.getElementById('mathModal').classList.remove('hidden'); }
+        function closeMathModal() { document.getElementById('mathModal').classList.add('hidden'); }
+        document.getElementById('mathModal').addEventListener('click', function(e) { if (e.target === this) closeMathModal(); });
 
         function updateMap() {
             const address = document.getElementById('addressInput').value;
@@ -702,7 +707,6 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             document.getElementById('optimizerSelect').innerHTML = optOptions;
         }
 
-        // NAUJA: Dinaminis įrangos filtravimas pagal Fazę
         function updateEquipmentByPhase() {
             const phase = parseInt(document.querySelector('input[name="phase"]:checked').value);
             
@@ -730,13 +734,12 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             });
             document.getElementById('evStationSelect').innerHTML = evOptions;
 
-            // Baterijos ir moduliai nepriklauso nuo fazės
             if (document.getElementById('batterySelect').innerHTML === '') {
                 document.getElementById('batterySelect').innerHTML = DATA.batteries.map((item, index) => `<option value="${index}">${item.name}</option>`).join('');
                 document.getElementById('moduleSelect').innerHTML = DATA.modules.map((item, index) => `<option value="${index}">${item.name}</option>`).join('');
             }
             
-            calculate(); // Perskaičiuoti po atnaujinimo
+            calculate(); 
         }
 
         function updateInputListeners() {
@@ -782,7 +785,6 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             const optimizersCount = parseInt(document.getElementById('optimizerSelect').value);
             const selectedModule = DATA.modules[document.getElementById('moduleSelect').value];
             
-            // Saugikliai, jei po fazės pakeitimo meniu būtų tuščias
             const invIndex = document.getElementById('inverterSelect').value || 0;
             const hybIndex = document.getElementById('hybridSelect').value || 0;
             const evIndex = document.getElementById('evStationSelect').value || 0;
@@ -940,7 +942,6 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             let apvaDiscount = 0;
             let apvaWarning = document.getElementById('apvaWarningMsg');
             
-            // NAUJA GRIEŽTA APVA LOGIKA
             if(hasApva) {
                 if(!hasBattery) {
                     apvaWarning.innerText = "Parama skiriama tik įsirengiant elektrinę KARTU su kaupikliu.";
@@ -1024,14 +1025,76 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             document.getElementById('resKw').innerText = totalKw.toFixed(2);
             document.getElementById('resSavings').innerText = yearlySavings.toFixed(0);
             document.getElementById('resPayback').innerText = paybackYears;
+
+            // Fiksuojame duomenis išsaugojimo funkcijai
+            window.currentProposalData = {
+                power: totalKw.toFixed(2),
+                modules: `${manualModuleCount} vnt. ${selectedModule.name}`,
+                inverter: hasBattery && batteryMode === 'kit' ? selHybrid.name : (selInverter ? selInverter.name : ''),
+                battery: hasBattery && batteryMode === 'custom' ? selBattery.name : (hasBattery && batteryMode === 'kit' ? "Integruota hibrido komplekte" : "Nėra"),
+                evStation: evStationPrice > 0 ? DATA.evStations[evIndex].name : "Nėra",
+                priceNoApva: totalNoApva.toFixed(2),
+                apva: apvaDiscount.toFixed(2),
+                finalPrice: finalPrice.toFixed(2),
+                payback: paybackYears
+            };
+        }
+
+        // NAUJA FUNKCIJA: PASIŪLYMO IŠSAUGOJIMAS KORTELĖJE
+        let proposalCount = 0;
+        function saveProposal() {
+            proposalCount++;
+            const data = window.currentProposalData;
+            
+            const html = `
+                <div class="bg-white rounded-xl shadow-lg border-2 border-blue-100 p-5 relative proposal-card transition-all hover:shadow-xl">
+                    <button onclick="this.closest('.proposal-card').remove()" class="absolute top-3 right-3 text-slate-300 hover:text-red-500 transition-colors" title="Ištrinti variantą">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                    
+                    <h4 class="font-black text-blue-900 mb-4 border-b border-slate-100 pb-2 text-lg">Variantas #${proposalCount}</h4>
+                    
+                    <div class="space-y-2 text-xs text-slate-700 mb-5">
+                        <p class="flex justify-between"><span class="font-semibold text-slate-500">Sistemos galia:</span> <span class="font-bold text-blue-800">${data.power} kWp</span></p>
+                        <p class="flex flex-col"><span class="font-semibold text-slate-500 mb-0.5">Saulės moduliai:</span> <span class="text-slate-800 truncate" title="${data.modules}">${data.modules}</span></p>
+                        <p class="flex flex-col"><span class="font-semibold text-slate-500 mb-0.5">Inverteris:</span> <span class="text-slate-800 truncate" title="${data.inverter}">${data.inverter}</span></p>
+                        <p class="flex justify-between items-center"><span class="font-semibold text-slate-500">Kaupiklis (Baterija):</span> <span class="font-medium ${data.battery === 'Nėra' ? 'text-slate-400' : 'text-purple-700'}">${data.battery === 'Nėra' ? 'Nėra' : (data.battery.includes('Integruota') ? 'Yra (Integruota)' : 'Yra (Atskiras)')}</span></p>
+                        ${data.evStation !== "Nėra" ? `<p class="flex justify-between items-center"><span class="font-semibold text-slate-500">EV Stotelė:</span> <span class="font-medium text-green-700">Pridėta</span></p>` : ''}
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2 text-sm">
+                        <div class="flex justify-between items-center text-slate-500">
+                            <span>Kaina be paramos:</span> 
+                            <span>${data.priceNoApva} €</span>
+                        </div>
+                        <div class="flex justify-between items-center text-emerald-600 font-bold">
+                            <span>APVA kompensacija:</span> 
+                            <span>-${data.apva} €</span>
+                        </div>
+                        <div class="flex justify-between items-center font-black text-blue-900 text-xl pt-2 border-t border-slate-200 mt-2">
+                            <span>GALUTINĖ KAINA:</span> 
+                            <span>${data.finalPrice} €</span>
+                        </div>
+                        <div class="flex justify-between items-center text-slate-600 font-bold pt-2 mt-1">
+                            <span class="uppercase tracking-wider text-[10px]">Atsiperkamumas:</span> 
+                            <span class="text-lg">${data.payback} m.</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('proposalsContainer').insertAdjacentHTML('beforeend', html);
+            document.getElementById('savedProposalsSection').classList.remove('hidden');
+            
+            // Lėtas slinkimas žemyn, kad vartotojas pamatytų naują kortelę
+            document.getElementById('savedProposalsSection').scrollIntoView({ behavior: 'smooth', block: 'end' });
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             populateKwSelects();
-            updateEquipmentByPhase(); // Užpildo įrangą pagal numatytąją fazę (Trifazis)
+            updateEquipmentByPhase(); 
             updateInputListeners();
             toggleDeleteButtons();
-            // calculate() is called inside updateEquipmentByPhase
         });
     </script>
 </body>
