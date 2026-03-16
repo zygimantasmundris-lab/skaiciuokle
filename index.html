@@ -202,6 +202,24 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                             </div>
                         </div>
 
+                        <div class="bg-orange-50 p-4 rounded border border-orange-200 lg:col-span-3 transition-all hover:shadow-md">
+                            <label class="flex items-center space-x-3 font-bold text-orange-900 cursor-pointer">
+                                <input type="checkbox" id="hpCheck" class="w-5 h-5 text-orange-600 rounded"> 
+                                <span>Šildausi šilumos siurbliu (Oras-Vanduo)</span>
+                            </label>
+                            <div id="hpBox" class="hidden mt-4 pt-4 border-t border-orange-200 flex flex-col md:flex-row md:space-x-8 space-y-4 md:space-y-0">
+                                <div class="w-full md:w-1/3">
+                                    <label class="text-xs font-bold text-orange-800 uppercase">Siurblio elektrinė galia (kW)?</label>
+                                    <input type="number" id="hpKw" value="9" class="w-full border-orange-300 p-2 rounded mt-1 font-semibold">
+                                </div>
+                                <div class="w-full md:w-2/3 flex items-center">
+                                    <p id="hpWarningMsg" class="text-xs text-red-600 font-bold hidden bg-white p-2 rounded border border-red-200">
+                                        🚨 Dėmesio: Jūsų įvado galia gali būti per maža vienu metu šildyti namus ir krauti automobilį. Išmanusis skaitiklis (Smart Meter) ir dinaminis galios valdymas (DLB) sistemoje yra PRIVALOMI!
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="flex flex-col md:flex-row md:space-x-6 space-y-3 md:space-y-0 lg:col-span-3 border-t border-slate-200 pt-6 mt-2">
                             <label class="flex items-center space-x-3 font-bold text-purple-700 cursor-pointer bg-purple-50 p-3 rounded border border-purple-100 flex-1 hover:bg-purple-100 transition-colors">
                                 <input type="checkbox" id="batteryCheck" class="w-6 h-6 text-purple-600 rounded"> 
@@ -537,7 +555,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                         <li><strong>Bazinė galia:</strong> Modulių skaičius padauginamas iš vieno modulio galios (pvz. 12 x 460W = 5.52 kWp).</li>
                         <li><strong>PVGIS koeficientas:</strong> Ši galia dauginama iš saulėtumo rodiklio pagal stogo kryptį (pvz., Pietūs = 1000, Rytai = 850).</li>
                         <li><strong>Šešėlis ir Optimizatoriai:</strong> Jei nurodėte šešėlį, generacija mažinama. <em>Tačiau, pasirinkus optimizatorius, šis praradimas yra anuliuojamas</em>, nes optimizatoriai neutralizuoja šešėlio poveikį.</li>
-                        <li><strong>ESO ribojimai:</strong> Jei tinklas leidžia atiduoti gerokai mažiau galios nei sugeneruoja elektrinė (pvz., atidavimas tik 1 kW), vasaros vidurdienį sistema nespės atiduoti pertekliaus. Skaičiuoklė tai mato ir automatiškai minusuoja „nukirptą“ (prarastą) energiją.</li>
+                        <li><strong>ESO ribojimai (ir Šilumos siurblys):</strong> Jei tinklas leidžia atiduoti mažiau galios nei sugeneruojate, vasaros vidurdienį sistema „nukerpa“ perteklių. Skaičiuoklė tai minusuoja. Tačiau, jei nurodėte, kad turite šilumos siurblį, ši prarasta energija teoriškai nukreipiama į boilerio kaitinimą (SG Ready), todėl energijos praradimai sumažinami perpus!</li>
                     </ul>
                 </div>
 
@@ -766,6 +784,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             const baseCons = parseFloat(document.getElementById('baseConsumption').value) || 0;
             const kwhPrice = parseFloat(document.getElementById('kwhPrice').value) || 0;
             const pvgis = parseFloat(document.getElementById('pvgis').value) || 0;
+            const gridPowerVal = parseFloat(document.getElementById('gridPower').value) || 0;
             
             let roofArea = 0;
             const lengths = document.querySelectorAll('.roof-length');
@@ -785,15 +804,15 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             const hasShadow = document.getElementById('shadowCheck').checked;
             const shadowPercent = hasShadow ? parseFloat(document.getElementById('shadowPercent').value) : 0;
             
+            // Šilumos siurblio logika
+            const hasHp = document.getElementById('hpCheck').checked;
+            const hpKw = hasHp ? (parseFloat(document.getElementById('hpKw').value) || 0) : 0;
+            document.getElementById('hpBox').style.display = hasHp ? 'flex' : 'none';
+
+            // EV logika
             const hasEv = document.getElementById('evCheck').checked;
             const evKwh = hasEv ? (parseFloat(document.getElementById('evKwh').value) || 0) : 0;
             const hasStation = document.getElementById('evStationCheck').checked;
-
-            const hasBattery = document.getElementById('batteryCheck').checked;
-            const batteryMode = document.querySelector('input[name="batteryMode"]:checked').value;
-            
-            const hasApva = document.getElementById('apvaCheck').checked;
-            const hasInstall = document.getElementById('installCheck').checked;
 
             const optimizersCount = parseInt(document.getElementById('optimizerSelect').value);
             const selectedModule = DATA.modules[document.getElementById('moduleSelect').value];
@@ -805,6 +824,29 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             const selInverter = DATA.inverters[invIndex];
             const selHybrid = DATA.hybrids[hybIndex];
             const selBattery = DATA.batteries[document.getElementById('batterySelect').value];
+
+            // Apskaičiuojame EV stotelės galingumą įspėjimui
+            let evStationKw = 0;
+            if (hasEv && !hasStation && DATA.evStations[evIndex]) {
+                let evName = DATA.evStations[evIndex].name;
+                if (evName.includes('7.4kW')) evStationKw = 7.4;
+                else if (evName.includes('11kW')) evStationKw = 11;
+                else if (evName.includes('22kW')) evStationKw = 22;
+            } else if (hasEv && hasStation) {
+                evStationKw = 11; // Prielaida, jei jau turi stotelę
+            }
+
+            // Įspėjimas dėl įvado perkrovimo (HP + EV)
+            if (hasHp && (hpKw + evStationKw >= gridPowerVal * 0.8)) {
+                document.getElementById('hpWarningMsg').classList.remove('hidden');
+            } else {
+                document.getElementById('hpWarningMsg').classList.add('hidden');
+            }
+
+            const hasBattery = document.getElementById('batteryCheck').checked;
+            const batteryMode = document.querySelector('input[name="batteryMode"]:checked').value;
+            const hasApva = document.getElementById('apvaCheck').checked;
+            const hasInstall = document.getElementById('installCheck').checked;
             
             let materialsRate = parseFloat(document.getElementById('roofCover').value) || 70;
 
@@ -907,6 +949,11 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                 }
             } else if (!hasEso && totalKw > 0) {
                 curtailmentPercent = hasBattery ? 40 : 80; 
+            }
+
+            // ŠILUMOS SIURBLIO SG-READY MAGIJA: Sumažiname praradimus per pusę!
+            if (hasHp && curtailmentPercent > 0) {
+                curtailmentPercent = Math.max(0, curtailmentPercent / 2);
             }
 
             if(curtailmentPercent > 0) {
@@ -1088,6 +1135,11 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                 }
             }
 
+            // ŠILUMOS SIURBLIO PARDAVIMO ARGUMENTAS
+            if (hasHp) {
+                pitches.push('<strong>Šilumos siurblio (SG Ready) integracija:</strong> Kadangi namus šildote šilumos siurbliu, mes suprogramuosime sistemą taip, kad inverteris nukreiptų saulės perteklių tiesiai į jūsų boilerio kaitinimą. Taip siurblys taps dar viena nemokama „vandens baterija“, o Jūs neprarasite energijos net ir ribojant atidavimą į ESO tinklą!');
+            }
+
             let pitchContainer = document.getElementById('salesPitchesBox');
             if (pitches.length > 0) {
                 pitchContainer.classList.remove('hidden');
@@ -1116,7 +1168,8 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                 payback: paybackYears,
                 gridPower: document.getElementById('gridPower').value + ' kW',
                 esoCondition: hasEso ? document.getElementById('esoPower').value + ' kW' : 'Neatiduodama (0 kW)',
-                savings: yearlySavings.toFixed(0) + ' €'
+                savings: yearlySavings.toFixed(0) + ' €',
+                hpText: hasHp ? `Yra (${hpKw} kW)` : 'Nėra'
             };
         }
 
@@ -1152,6 +1205,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                         
                         <p class="flex flex-col mt-1"><span class="font-semibold text-slate-500 mb-0.5">Inverteris:</span> <span class="text-slate-800 truncate" title="${data.inverter}">${data.inverter}</span></p>
                         <p class="flex justify-between items-center mt-2"><span class="font-semibold text-slate-500">Kaupiklis (Baterija):</span> <span class="font-medium ${data.battery === 'Nėra' ? 'text-slate-400' : 'text-purple-700'}">${data.battery === 'Nėra' ? 'Nėra' : (data.battery.includes('Integruota') ? 'Yra (Integruota)' : 'Yra (Atskiras)')}</span></p>
+                        <p class="flex justify-between items-center"><span class="font-semibold text-slate-500">Šilumos siurblys:</span> <span class="font-medium ${data.hpText === 'Nėra' ? 'text-slate-400' : 'text-orange-600'}">${data.hpText}</span></p>
                         ${data.evStation !== "Nėra" ? `<p class="flex justify-between items-center"><span class="font-semibold text-slate-500">EV Stotelė:</span> <span class="font-medium text-green-700">Pridėta</span></p>` : ''}
                     </div>
 
