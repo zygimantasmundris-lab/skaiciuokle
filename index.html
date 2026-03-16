@@ -451,7 +451,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                 <ul class="list-disc pl-5 space-y-1 text-slate-600">
                     <li>Elektrinės galia turi būti ne mažesnė kaip <strong>5 kW</strong>.</li>
                     <li>Baterijos talpa turi būti ne mažesnė kaip <strong>10 kWh</strong>.</li>
-                    <li>Kompensacijos dydis yra fiksuotas (pagal nustatytus APVA įkainius saulės elektrinei ir baterijai).</li>
+                    <li>Atidavimas į ESO tinklą <strong>negali viršyti 1 kW</strong> (arba turi būti 0 kW).</li>
                 </ul>
                 <p class="text-xs text-slate-500 mt-4 italic">*Skaičiuoklėje paramos suma pritaikoma automatiškai, jei tenkinamos šios sąlygos.</p>
             </div>
@@ -905,6 +905,7 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             let apvaDiscount = 0;
             let apvaWarning = document.getElementById('apvaWarningMsg');
             
+            // NAUJA GRIEŽTA APVA LOGIKA
             if(hasApva) {
                 if(!hasBattery) {
                     apvaWarning.innerText = "Parama skiriama tik įsirengiant elektrinę KARTU su kaupikliu.";
@@ -916,6 +917,10 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                     apvaDiscount = 0;
                 } else if(totalKw < 5) {
                     apvaWarning.innerText = "Parama skiriama tik nuo 5 kW galios elektrinėms.";
+                    apvaWarning.classList.remove('hidden');
+                    apvaDiscount = 0;
+                } else if (hasEso && esoAllowedPower > 1) { // <-- ČIA YRA NAUJAS SAUGIKLIS
+                    apvaWarning.innerText = "Pagal APVA sąlygas, atidavimas į tinklą negali viršyti 1 kW.";
                     apvaWarning.classList.remove('hidden');
                     apvaDiscount = 0;
                 } else {
