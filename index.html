@@ -696,7 +696,12 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                 { name: "FoxESS L11P EV 11kW", price: 457.38, phase: 3 },
                 { name: "Teltonika TeltoCharge 11kW (Type 2, 5m kabelis)", price: 870.27, phase: 3 },
                 { name: "Teltonika TeltoCharge 22kW (Type 2, 5m kabelis)", price: 904.02, phase: 3 }
-            ]
+            ],
+            
+            optimizerPrice: 52.27, 
+            optimizerHubPrice: 278.30, 
+            apvaFixedDiscount: 5012.19,
+            esoStorageFee: 0.054 
         };
 
         function populateKwSelects() {
@@ -1051,12 +1056,8 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
             document.getElementById('resSavings').innerText = yearlySavings.toFixed(0);
             document.getElementById('resPayback').innerText = paybackYears;
 
-            // ==========================================
-            // PARDAVIMO ARGUMENTŲ (PITCHES) LOGIKA
-            // ==========================================
             let pitches = [];
             
-            // Inverterio / Hibrido argumentai
             if (activeInverterName.includes('Solis')) {
                 pitches.push('<strong>Solis inverteriai:</strong> Laiko patikrintas darbinis arklys. Vienas populiariausių ir patikimiausių pasirinkimų Lietuvoje – įranga, kurią sumontuoji ir pamiršti.');
             } else if (activeInverterName.includes('FoxESS')) {
@@ -1067,7 +1068,6 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                 pitches.push('<strong>Sungrow:</strong> Premium klasė (inverterių Mercedes). Pasižymi aukščiausio lygio patikimumu ir tobulu aušinimu. Pasirinkimas tiems, kas ieško geriausios inžinerijos.');
             }
 
-            // Modulių argumentai
             let modName = selectedModule.name;
             if (modName.includes('AIKO')) {
                 pitches.push('<strong>AIKO (Neostar) moduliai:</strong> Technologijų viršūnė. Priekyje nėra jokių sidabrinių linijų – jie absoliučiai juodi, ypač galingi ir efektyviai veikia net daliniame šešėlyje.');
@@ -1077,7 +1077,6 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                 pitches.push('<strong>Jolywood moduliai:</strong> Dvipusiai (Bifacial) lyderiai. Gamina elektrą ne tik iš priekio, bet ir sugeria atspindžius iš nugarėlės. Idealu plokštiems stogams.');
             }
 
-            // EV stotelės argumentai
             if (hasEv && !hasStation && DATA.evStations[evIndex]) {
                 let evName = DATA.evStations[evIndex].name;
                 if (evName.includes('Teltonika')) {
@@ -1089,7 +1088,6 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                 }
             }
 
-            // Atvaizduojame argumentus
             let pitchContainer = document.getElementById('salesPitchesBox');
             if (pitches.length > 0) {
                 pitchContainer.classList.remove('hidden');
@@ -1103,7 +1101,6 @@ Kliento pageidavimas: nori sprendimo, kuris būtų jam naudingiausias vertinant 
                 pitchContainer.classList.add('hidden');
             }
 
-            // Fiksuojame duomenis išsaugojimo funkcijai
             window.currentProposalData = {
                 power: totalKw.toFixed(2),
                 roofType: roofTypeDisplay,
